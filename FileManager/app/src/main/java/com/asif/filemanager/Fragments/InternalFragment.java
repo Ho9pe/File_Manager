@@ -122,6 +122,7 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                     singleFile.getName().toLowerCase().endsWith(".mkv") ||
 
                     singleFile.getName().toLowerCase().endsWith(".pdf") ||
+                    singleFile.getName().toLowerCase().endsWith(".epub") ||
                     singleFile.getName().toLowerCase().endsWith(".doc") ||
                     singleFile.getName().toLowerCase().endsWith(".apk") ||
 
@@ -207,6 +208,7 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
 
                         AlertDialog alertDialog_details = detailDialog.create();
                         alertDialog_details.show();
+                        optionDialog.cancel();
                         break;
 
                     case "Rename":
@@ -242,6 +244,7 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                         });
                         AlertDialog alertdialog_rename = renameDialog.create();
                         alertdialog_rename.show();
+                        optionDialog.cancel();
                         break;
 
                     case "Delete":
@@ -265,6 +268,7 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
 
                         AlertDialog alertDialog_delete = deleteDialog.create();
                         alertDialog_delete.show();
+                        optionDialog.cancel();
                         break;
 
                     case "Share":
@@ -275,6 +279,7 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                         shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
                         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         startActivity(Intent.createChooser(shareIntent, "Share " + fileName));
+                        optionDialog.cancel();
                         break;
                 }
             }

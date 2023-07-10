@@ -43,10 +43,12 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-public class CatagorizedFragment extends Fragment implements OnFileSelectedListener {
+public class CategorizedFragment extends Fragment implements OnFileSelectedListener {
 
     private RecyclerView recyclerView;
     private FileAdapter fileAdapter;
@@ -60,15 +62,9 @@ public class CatagorizedFragment extends Fragment implements OnFileSelectedListe
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_catagorized, container, false);
+        view = inflater.inflate(R.layout.fragment_categorized, container, false);
 
-        Bundle bundle = this.getArguments();
-        if(bundle.getString("fileType").equals("downlaods")){
-            path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        }
-        else{
-            path = Environment.getExternalStorageDirectory();
-        }
+        path = Environment.getExternalStorageDirectory();
 
         runtimePermission();
 
@@ -172,7 +168,8 @@ public class CatagorizedFragment extends Fragment implements OnFileSelectedListe
                 extension.equalsIgnoreCase("mp4") || extension.equalsIgnoreCase("mkv") ||
                 extension.equalsIgnoreCase("pdf") || extension.equalsIgnoreCase("doc") ||
                 extension.equalsIgnoreCase("apk") || extension.equalsIgnoreCase("7z") ||
-                extension.equalsIgnoreCase("rar") || extension.equalsIgnoreCase("zip");
+                extension.equalsIgnoreCase("rar") || extension.equalsIgnoreCase("zip") ||
+                extension.equalsIgnoreCase("epub");
     }
 
     private String getFileExtension(File file) {
@@ -184,14 +181,51 @@ public class CatagorizedFragment extends Fragment implements OnFileSelectedListe
         return "";
     }
 
+    public ArrayList<File> findDownloadedFiles() {
+        ArrayList<File> downloadedFiles = new ArrayList<>();
+        File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File[] files = downloadDir.listFiles();
+
+        if (files != null) {
+            Arrays.sort(files, (file1, file2) -> Long.compare(file2.lastModified(), file1.lastModified()));
+
+            // Add the last 50 downloaded files
+            int count = 0;
+            for (File file : files) {
+                if (count >= 50) {
+                    break;
+                }
+
+                if (file.isFile()) {
+                    downloadedFiles.add(file);
+                    count++;
+                }
+            }
+        }
+
+        return downloadedFiles;
+    }
+    String fileType;
     private void displayFiles() {
-        recyclerView = view.findViewById(R.id.recycler_internal);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        fileList = new ArrayList<>();
-        fileList.addAll(findFiles(path));
-        fileAdapter = new FileAdapter(getContext(), fileList, this);
-        recyclerView.setAdapter(fileAdapter);
+            recyclerView = view.findViewById(R.id.recycler_internal);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+            fileList = new ArrayList<>();
+//            fileList.addAll(findFiles(Environment.getExternalStorageDirectory()));
+            Bundle bundle = this.getArguments();
+            fileType = bundle.getString("fileType");
+
+            if (fileType.equals("downloads")) {
+                fileList.addAll(findDownloadedFiles());
+            } else {
+                fileList.addAll(findFiles(Environment.getExternalStorageDirectory()));
+            }
+            fileList.sort(Comparator.comparingLong(File::lastModified).reversed());
+            if(fileType != "downloads") {
+                fileList = new ArrayList<>(fileList.subList(0, Math.min(fileList.size(), 20)));
+            }
+            fileAdapter = new FileAdapter(getContext(), fileList, this);
+            recyclerView.setAdapter(fileAdapter);
     }
 
     @Override
@@ -199,7 +233,7 @@ public class CatagorizedFragment extends Fragment implements OnFileSelectedListe
         if(file.isDirectory()){
             Bundle bundle = new Bundle();
             bundle.putString("path", file.getAbsolutePath());
-            CatagorizedFragment internalFragment = new CatagorizedFragment();
+            CategorizedFragment internalFragment = new CategorizedFragment();
             internalFragment.setArguments(bundle);
             getFragmentManager().beginTransaction().replace(R.id.fragment_container, internalFragment).addToBackStack(null).commit();
 
@@ -257,6 +291,7 @@ public class CatagorizedFragment extends Fragment implements OnFileSelectedListe
 
                         AlertDialog alertDialog_details = detailDialog.create();
                         alertDialog_details.show();
+                        optionDialog.cancel();
                         break;
 
                     case "Rename":
@@ -292,6 +327,7 @@ public class CatagorizedFragment extends Fragment implements OnFileSelectedListe
                         });
                         AlertDialog alertdialog_rename = renameDialog.create();
                         alertdialog_rename.show();
+                        optionDialog.cancel();
                         break;
 
                     case "Delete":
@@ -315,6 +351,7 @@ public class CatagorizedFragment extends Fragment implements OnFileSelectedListe
 
                         AlertDialog alertDialog_delete = deleteDialog.create();
                         alertDialog_delete.show();
+                        optionDialog.cancel();
                         break;
 
                     case "Share":
@@ -325,6 +362,7 @@ public class CatagorizedFragment extends Fragment implements OnFileSelectedListe
                         shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
                         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         startActivity(Intent.createChooser(shareIntent, "Share " + fileName));
+                        optionDialog.cancel();
                         break;
                 }
             }

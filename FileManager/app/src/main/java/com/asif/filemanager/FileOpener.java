@@ -21,7 +21,7 @@ public class FileOpener {
         if(uri.toString().toLowerCase().contains(".doc")){
             intent.setDataAndType(uri, "application/msword");
         }
-        else if(uri.toString().toLowerCase().contains(".pdf")){
+        else if(uri.toString().toLowerCase().contains(".pdf") || uri.toString().toLowerCase().contains(".epub")){
             intent.setDataAndType(uri, "application/pdf");
         }
         else if(uri.toString().toLowerCase().contains(".mp3")){

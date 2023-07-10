@@ -76,10 +76,10 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
             public void onClick(View view) {
                 Bundle args = new Bundle();
                 args.putString("fileType", "image");
-                CatagorizedFragment catagorizedFragment = new CatagorizedFragment();
-                catagorizedFragment.setArguments(args);
+                CategorizedFragment categorizedFragment = new CategorizedFragment();
+                categorizedFragment.setArguments(args);
 
-                getFragmentManager().beginTransaction().add(R.id.fragment_container, catagorizedFragment).addToBackStack(null).commit();
+                getFragmentManager().beginTransaction().add(R.id.fragment_container, categorizedFragment).addToBackStack(null).commit();
 
             }
         });
@@ -88,10 +88,10 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
             public void onClick(View view) {
                 Bundle args = new Bundle();
                 args.putString("fileType", "video");
-                CatagorizedFragment catagorizedFragment = new CatagorizedFragment();
-                catagorizedFragment.setArguments(args);
+                CategorizedFragment categorizedFragment = new CategorizedFragment();
+                categorizedFragment.setArguments(args);
 
-                getFragmentManager().beginTransaction().add(R.id.fragment_container, catagorizedFragment).addToBackStack(null).commit();
+                getFragmentManager().beginTransaction().add(R.id.fragment_container, categorizedFragment).addToBackStack(null).commit();
 
             }
         });
@@ -100,10 +100,10 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
             public void onClick(View view) {
                 Bundle args = new Bundle();
                 args.putString("fileType", "music");
-                CatagorizedFragment catagorizedFragment = new CatagorizedFragment();
-                catagorizedFragment.setArguments(args);
+                CategorizedFragment categorizedFragment = new CategorizedFragment();
+                categorizedFragment.setArguments(args);
 
-                getFragmentManager().beginTransaction().add(R.id.fragment_container, catagorizedFragment).addToBackStack(null).commit();
+                getFragmentManager().beginTransaction().add(R.id.fragment_container, categorizedFragment).addToBackStack(null).commit();
 
             }
         });
@@ -112,10 +112,10 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
             public void onClick(View view) {
                 Bundle args = new Bundle();
                 args.putString("fileType", "docs/pdf");
-                CatagorizedFragment catagorizedFragment = new CatagorizedFragment();
-                catagorizedFragment.setArguments(args);
+                CategorizedFragment categorizedFragment = new CategorizedFragment();
+                categorizedFragment.setArguments(args);
 
-                getFragmentManager().beginTransaction().add(R.id.fragment_container, catagorizedFragment).addToBackStack(null).commit();
+                getFragmentManager().beginTransaction().add(R.id.fragment_container, categorizedFragment).addToBackStack(null).commit();
 
             }
         });
@@ -124,10 +124,10 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
             public void onClick(View view) {
                 Bundle args = new Bundle();
                 args.putString("fileType", "downloads");
-                CatagorizedFragment catagorizedFragment = new CatagorizedFragment();
-                catagorizedFragment.setArguments(args);
+                CategorizedFragment categorizedFragment = new CategorizedFragment();
+                categorizedFragment.setArguments(args);
 
-                getFragmentManager().beginTransaction().add(R.id.fragment_container, catagorizedFragment).addToBackStack(null).commit();
+                getFragmentManager().beginTransaction().add(R.id.fragment_container, categorizedFragment).addToBackStack(null).commit();
 
             }
         });
@@ -136,10 +136,10 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
             public void onClick(View view) {
                 Bundle args = new Bundle();
                 args.putString("fileType", "apk");
-                CatagorizedFragment catagorizedFragment = new CatagorizedFragment();
-                catagorizedFragment.setArguments(args);
+                CategorizedFragment categorizedFragment = new CategorizedFragment();
+                categorizedFragment.setArguments(args);
 
-                getFragmentManager().beginTransaction().add(R.id.fragment_container, catagorizedFragment).addToBackStack(null).commit();
+                getFragmentManager().beginTransaction().add(R.id.fragment_container, categorizedFragment).addToBackStack(null).commit();
 
             }
         });
@@ -180,6 +180,7 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
                         singleFile.getName().toLowerCase().endsWith(".mp4") ||
                         singleFile.getName().toLowerCase().endsWith(".mkv") ||
                         singleFile.getName().toLowerCase().endsWith(".pdf") ||
+                        singleFile.getName().toLowerCase().endsWith(".epub") ||
                         singleFile.getName().toLowerCase().endsWith(".doc") ||
                         singleFile.getName().toLowerCase().endsWith(".apk") ||
                         singleFile.getName().toLowerCase().endsWith(".7z") ||
@@ -199,7 +200,8 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         fileList = new ArrayList<>();
         fileList.addAll(findFiles(Environment.getExternalStorageDirectory()));
-        fileList = new ArrayList<>(fileList.subList(0, Math.min(fileList.size(), 10))); // Get only the first 10 files
+        fileList.sort(Comparator.comparingLong(File::lastModified).reversed());
+        fileList = new ArrayList<>(fileList.subList(0, Math.min(fileList.size(), 20))); // Get only the first 10 files
         fileAdapter = new FileAdapter(getContext(), fileList, this);
         recyclerView.setAdapter(fileAdapter);
     }
@@ -268,6 +270,7 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
 
                         AlertDialog alertDialog_details = detailDialog.create();
                         alertDialog_details.show();
+                        optionDialog.cancel();
                         break;
 
                     case "Rename":
@@ -303,6 +306,7 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
                         });
                         AlertDialog alertdialog_rename = renameDialog.create();
                         alertdialog_rename.show();
+                        optionDialog.cancel();
                         break;
 
                     case "Delete":
@@ -326,6 +330,7 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
 
                         AlertDialog alertDialog_delete = deleteDialog.create();
                         alertDialog_delete.show();
+                        optionDialog.cancel();
                         break;
 
                     case "Share":
@@ -336,6 +341,7 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
                         shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
                         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         startActivity(Intent.createChooser(shareIntent, "Share " + fileName));
+                        optionDialog.cancel();
                         break;
                 }
             }

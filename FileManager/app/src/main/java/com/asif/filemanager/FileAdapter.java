@@ -1,5 +1,6 @@
 package com.asif.filemanager;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
@@ -31,7 +32,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FileViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FileViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
         holder.tvName.setText(file.get(position).getName());
         holder.tvName.setSelected(true);
@@ -65,6 +66,9 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
         }
         else if(file.get(position).getName().toLowerCase().endsWith(".pdf")){
             holder.imgFile.setImageResource(R.drawable.ic_pdf);
+        }
+        else if(file.get(position).getName().toLowerCase().endsWith(".epub")){
+            holder.imgFile.setImageResource(R.drawable.ic_epub);
         }
         else if(file.get(position).getName().toLowerCase().endsWith(".apk")){
             holder.imgFile.setImageResource(R.drawable.ic_android);
