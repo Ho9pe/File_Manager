@@ -40,6 +40,8 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -55,7 +57,9 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
     private TextView tv_pathHolder;
     File storage;
     String data;
-    String[] items = {"Details", "Rename", "Delete", "Share"};
+    String[] items = {"Details", "Rename", "Copy", "Paste", "Delete", "Share"};
+
+    private File selectedFile;
 
     View view;
 
@@ -170,6 +174,24 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
         return resolver.getType(uri);
     }
 
+
+    private boolean copyFile(File sourceFile, File destinationFile) {
+        try {
+            FileInputStream inputStream = new FileInputStream(sourceFile);
+            FileOutputStream outputStream = new FileOutputStream(destinationFile);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+            inputStream.close();
+            outputStream.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
     @Override
     public void onFileLongClicked(File file, int position) {
         final Dialog optionDialog = new Dialog(getContext());
@@ -202,13 +224,12 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                         detailDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                optionDialog.cancel();
+                                dialogInterface.dismiss();
                             }
                         });
 
                         AlertDialog alertDialog_details = detailDialog.create();
                         alertDialog_details.show();
-                        optionDialog.cancel();
                         break;
 
                     case "Rename":
@@ -221,9 +242,9 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 String new_name = name.getEditableText().toString();
-                                String extention = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf("."));
+                                String extension = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf("."));
                                 File current = new File(file.getAbsolutePath());
-                                File destination = new File(file.getAbsolutePath().replace(file.getName(), new_name) + extention);
+                                File destination = new File(file.getAbsolutePath().replace(file.getName(), new_name) + extension);
 
                                 if(current.renameTo(destination)){
                                     fileList.set(position, destination);
@@ -239,12 +260,38 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                         renameDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                optionDialog.cancel();
+                                dialogInterface.dismiss();
                             }
                         });
                         AlertDialog alertdialog_rename = renameDialog.create();
                         alertdialog_rename.show();
-                        optionDialog.cancel();
+                        break;
+
+                    case "Copy":
+                        selectedFile = file;
+                        Toast.makeText(getContext(), "File copied", Toast.LENGTH_SHORT).show();
+                        optionDialog.dismiss();
+                        break;
+
+                    case "Paste":
+                        if (selectedFile != null) {
+                            File destinationDir = new File(file.getAbsolutePath());
+                            if (destinationDir.exists() && destinationDir.isDirectory()) {
+                                File newFile = new File(destinationDir, selectedFile.getName());
+                                if (copyFile(selectedFile, newFile)) {
+                                    fileList.add(newFile);
+                                    fileAdapter.notifyItemInserted(fileList.size() - 1);
+                                    Toast.makeText(getContext(), "File pasted", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getContext(), "Failed to paste file", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(getContext(), "Invalid destination folder", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "No file to paste", Toast.LENGTH_SHORT).show();
+                        }
+                        optionDialog.dismiss();
                         break;
 
                     case "Delete":
@@ -262,26 +309,25 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                         deleteDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                optionDialog.cancel();
+                                dialogInterface.dismiss();
                             }
                         });
 
                         AlertDialog alertDialog_delete = deleteDialog.create();
                         alertDialog_delete.show();
-                        optionDialog.cancel();
                         break;
 
                     case "Share":
                         String fileName = file.getName();
-                        Uri fileUri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".fileprovider", file);
+                        Uri fileUri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".fileProvider", file);
                         Intent shareIntent = new Intent(Intent.ACTION_SEND);
                         shareIntent.setType(getMimeType(fileUri));
                         shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
                         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         startActivity(Intent.createChooser(shareIntent, "Share " + fileName));
-                        optionDialog.cancel();
                         break;
                 }
+                optionDialog.dismiss();
             }
         });
 
