@@ -333,7 +333,6 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
 
     }
 
-
     class CustomAdapter extends BaseAdapter{
 
         @Override
@@ -362,6 +361,12 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
             }
             else if(items[i].equals("Rename")){
                 imgOptions.setImageResource(R.drawable.ic_rename);
+            }
+            else if(items[i].equals("Copy")){
+                imgOptions.setImageResource(R.drawable.ic_copy);
+            }
+            else if(items[i].equals("Paste")){
+                imgOptions.setImageResource(R.drawable.ic_paste);
             }
             else if(items[i].equals("Delete")){
                 imgOptions.setImageResource(R.drawable.ic_delete);

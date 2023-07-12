@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -34,6 +36,7 @@ import com.asif.filemanager.FileAdapter;
 import com.asif.filemanager.FileOpener;
 import com.asif.filemanager.OnFileSelectedListener;
 import com.asif.filemanager.R;
+import com.google.android.material.navigation.NavigationView;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -41,6 +44,8 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,7 +61,8 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
     private TextView tv_pathHolder;
     File storage;
     String data;
-    String[] items = {"Details", "Rename", "Delete", "Share"};
+    String[] items = {"Details", "Rename", "Copy", "Paste", "Delete", "Share"};
+    private File selectedFile;
 
     String secStorage;
     View view;
@@ -136,6 +142,11 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
                 fragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, new HomeFragment())
                         .commit();
+                // Set "Home" item as selected in the navigation menu
+                NavigationView navigationView = requireActivity().findViewById(R.id.nav_view);
+                Menu menu = navigationView.getMenu();
+                MenuItem homeItem = menu.findItem(R.id.nav_home);
+                homeItem.setChecked(true);
             }
         });
         builder.show();
@@ -217,7 +228,23 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
         return resolver.getType(uri);
     }
 
-    @Override
+    private boolean copyFile(File sourceFile, File destinationFile) {
+        try {
+            FileInputStream inputStream = new FileInputStream(sourceFile);
+            FileOutputStream outputStream = new FileOutputStream(destinationFile);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+            inputStream.close();
+            outputStream.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
     public void onFileLongClicked(File file, int position) {
         final Dialog optionDialog = new Dialog(getContext());
         optionDialog.setContentView(R.layout.option_dialog);
@@ -243,19 +270,18 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
                         String formattedDate = formatter.format(lastModified);
 
                         details.setText("File Name: " + file.getName()+ "\n" +
-                                        "Size: " + Formatter.formatShortFileSize(getContext(), file.length()) + "\n" +
-                                        "Path: " + file.getAbsolutePath() + "\n" +
-                                        "Last Modified: " + formattedDate);
+                                "Size: " + Formatter.formatShortFileSize(getContext(), file.length()) + "\n" +
+                                "Path: " + file.getAbsolutePath() + "\n" +
+                                "Last Modified: " + formattedDate);
                         detailDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                optionDialog.cancel();
+                                dialogInterface.dismiss();
                             }
                         });
 
                         AlertDialog alertDialog_details = detailDialog.create();
                         alertDialog_details.show();
-                        optionDialog.cancel();
                         break;
 
                     case "Rename":
@@ -268,9 +294,9 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 String new_name = name.getEditableText().toString();
-                                String extention = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf("."));
+                                String extension = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf("."));
                                 File current = new File(file.getAbsolutePath());
-                                File destination = new File(file.getAbsolutePath().replace(file.getName(), new_name) + extention);
+                                File destination = new File(file.getAbsolutePath().replace(file.getName(), new_name) + extension);
 
                                 if(current.renameTo(destination)){
                                     fileList.set(position, destination);
@@ -286,12 +312,38 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
                         renameDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                optionDialog.cancel();
+                                dialogInterface.dismiss();
                             }
                         });
                         AlertDialog alertdialog_rename = renameDialog.create();
                         alertdialog_rename.show();
-                        optionDialog.cancel();
+                        break;
+
+                    case "Copy":
+                        selectedFile = file;
+                        Toast.makeText(getContext(), "File copied", Toast.LENGTH_SHORT).show();
+                        optionDialog.dismiss();
+                        break;
+
+                    case "Paste":
+                        if (selectedFile != null) {
+                            File destinationDir = new File(file.getAbsolutePath());
+                            if (destinationDir.exists() && destinationDir.isDirectory()) {
+                                File newFile = new File(destinationDir, selectedFile.getName());
+                                if (copyFile(selectedFile, newFile)) {
+                                    fileList.add(newFile);
+                                    fileAdapter.notifyItemInserted(fileList.size() - 1);
+                                    Toast.makeText(getContext(), "File pasted", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(getContext(), "Failed to paste file", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(getContext(), "Invalid destination folder", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getContext(), "No file to paste", Toast.LENGTH_SHORT).show();
+                        }
+                        optionDialog.dismiss();
                         break;
 
                     case "Delete":
@@ -309,32 +361,29 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
                         deleteDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                optionDialog.cancel();
+                                dialogInterface.dismiss();
                             }
                         });
 
                         AlertDialog alertDialog_delete = deleteDialog.create();
                         alertDialog_delete.show();
-                        optionDialog.cancel();
                         break;
 
                     case "Share":
                         String fileName = file.getName();
-                        Uri fileUri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".fileprovider", file);
+                        Uri fileUri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".fileProvider", file);
                         Intent shareIntent = new Intent(Intent.ACTION_SEND);
                         shareIntent.setType(getMimeType(fileUri));
                         shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
                         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         startActivity(Intent.createChooser(shareIntent, "Share " + fileName));
-                        optionDialog.cancel();
                         break;
                 }
+                optionDialog.dismiss();
             }
         });
 
     }
-
-
     class CustomAdapter extends BaseAdapter{
 
         @Override
@@ -364,6 +413,12 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
             else if(items[i].equals("Rename")){
                 imgOptions.setImageResource(R.drawable.ic_rename);
             }
+            else if(items[i].equals("Copy")){
+                imgOptions.setImageResource(R.drawable.ic_copy);
+            }
+            else if(items[i].equals("Paste")){
+                imgOptions.setImageResource(R.drawable.ic_paste);
+            }
             else if(items[i].equals("Delete")){
                 imgOptions.setImageResource(R.drawable.ic_delete);
             }
@@ -373,6 +428,8 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
             return myView;
         }
     }
+
+
 
 
     @NonNull

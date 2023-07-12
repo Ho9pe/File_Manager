@@ -60,7 +60,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
         else if(file.get(position).getName().toLowerCase().endsWith(".png")){
             holder.imgFile.setImageResource(R.drawable.ic_image);
         }
-//pdf doc apk
+//pdf doc epub apk
         else if(file.get(position).getName().toLowerCase().endsWith(".doc")){
             holder.imgFile.setImageResource(R.drawable.ic_docs);
         }
