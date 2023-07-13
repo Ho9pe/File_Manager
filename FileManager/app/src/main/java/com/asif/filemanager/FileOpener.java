@@ -14,7 +14,7 @@ public class FileOpener {
 
         File selectedFile = file;
         //Uri uri = FileProvider.getUriForFile(context, context.getApplicationContext().getPackageName() + ".provider", file);
-        Uri uri = FileProvider.getUriForFile(context, "com.asif.filemanager.fileprovider", file);
+        Uri uri = FileProvider.getUriForFile(context, "com.asif.fileManager.fileProvider", file);
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
 

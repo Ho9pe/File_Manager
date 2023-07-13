@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <provider
-            android:authorities="com.asif.filemanager.fileprovider"
+            android:authorities="com.asif.fileManager.fileProvider"
             android:name="androidx.core.content.FileProvider"
             android:exported="false"
             android:grantUriPermissions="true">

@@ -105,36 +105,37 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
         }).check();
     }
 
-
-    public ArrayList<File> findFiles(File file)
+    public ArrayList<File> findFiles(@NonNull File file)
     {
         ArrayList<File> arrayList = new ArrayList<>();
         File[] files = file.listFiles();
 
-        for(File singleFile : files){
-            if(singleFile.isDirectory() && !singleFile.isHidden()){
-                arrayList.add(singleFile);
+        if (files != null) {
+            for (File singleFile : files) {
+                if (singleFile.isDirectory() && !singleFile.isHidden()) {
+                    arrayList.add(singleFile);
+                }
             }
-        }
-        for(File singleFile: files){
-            if(     singleFile.getName().toLowerCase().endsWith(".jpeg") ||
-                    singleFile.getName().toLowerCase().endsWith(".jpg") ||
-                    singleFile.getName().toLowerCase().endsWith(".png") ||
 
-                    singleFile.getName().toLowerCase().endsWith(".mp3") ||
-                    singleFile.getName().toLowerCase().endsWith(".mp4") ||
-                    singleFile.getName().toLowerCase().endsWith(".mkv") ||
+            for (File singleFile : files) {
+                if (singleFile.getName().toLowerCase().endsWith(".jpeg") ||
+                        singleFile.getName().toLowerCase().endsWith(".jpg") ||
+                        singleFile.getName().toLowerCase().endsWith(".png") ||
 
-                    singleFile.getName().toLowerCase().endsWith(".pdf") ||
-                    singleFile.getName().toLowerCase().endsWith(".epub") ||
-                    singleFile.getName().toLowerCase().endsWith(".doc") ||
-                    singleFile.getName().toLowerCase().endsWith(".apk") ||
+                        singleFile.getName().toLowerCase().endsWith(".mp3") ||
+                        singleFile.getName().toLowerCase().endsWith(".mp4") ||
+                        singleFile.getName().toLowerCase().endsWith(".mkv") ||
 
-                    singleFile.getName().toLowerCase().endsWith(".7z") ||
-                    singleFile.getName().toLowerCase().endsWith(".rar") ||
-                    singleFile.getName().toLowerCase().endsWith(".zip"))
-            {
-                arrayList.add(singleFile);
+                        singleFile.getName().toLowerCase().endsWith(".pdf") ||
+                        singleFile.getName().toLowerCase().endsWith(".epub") ||
+                        singleFile.getName().toLowerCase().endsWith(".doc") ||
+                        singleFile.getName().toLowerCase().endsWith(".apk") ||
+
+                        singleFile.getName().toLowerCase().endsWith(".7z") ||
+                        singleFile.getName().toLowerCase().endsWith(".rar") ||
+                        singleFile.getName().toLowerCase().endsWith(".zip")) {
+                    arrayList.add(singleFile);
+                }
             }
         }
         return arrayList;
@@ -319,7 +320,7 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
 
                     case "Share":
                         String fileName = file.getName();
-                        Uri fileUri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".fileProvider", file);
+                        Uri fileUri = FileProvider.getUriForFile(getContext(), "com.asif.fileManager.fileProvider", file);
                         Intent shareIntent = new Intent(Intent.ACTION_SEND);
                         shareIntent.setType(getMimeType(fileUri));
                         shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
@@ -378,12 +379,5 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
         }
     }
 
-
-
-    @NonNull
-    @Override
-    public CreationExtras getDefaultViewModelCreationExtras() {
-        return super.getDefaultViewModelCreationExtras();
-    }
 }
 

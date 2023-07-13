@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.viewmodel.CreationExtras;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -381,7 +382,7 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
 
                     case "Share":
                         String fileName = file.getName();
-                        Uri fileUri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".fileProvider", file);
+                        Uri fileUri = FileProvider.getUriForFile(getContext(), "com.asif.fileManager.fileProvider", file);
                         Intent shareIntent = new Intent(Intent.ACTION_SEND);
                         shareIntent.setType(getMimeType(fileUri));
                         shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
@@ -393,6 +394,12 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
             }
         });
 
+    }
+
+    @NonNull
+    @Override
+    public CreationExtras getDefaultViewModelCreationExtras() {
+        return super.getDefaultViewModelCreationExtras();
     }
 
     class CustomAdapter extends BaseAdapter{

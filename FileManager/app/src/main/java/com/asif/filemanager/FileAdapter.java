@@ -36,18 +36,35 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
 
         holder.tvName.setText(file.get(position).getName());
         holder.tvName.setSelected(true);
-        int items = 0;
-        if(file.get(position).isDirectory()){
+//        int items = 0;
+//        if(file.get(position).isDirectory()){
+//            File[] files = file.get(position).listFiles();
+//            for (File singleFile : files){
+//                if(!singleFile.isHidden()){
+//                    items+=1;
+//                }
+//            }
+//            holder.tvSize.setText(String.valueOf(items)+ " Files");
+//
+//        }
+//        else{
+//            holder.tvSize.setText(Formatter.formatShortFileSize(context, file.get(position).length()));
+//        }
+        if (file.get(position).isDirectory()) {
             File[] files = file.get(position).listFiles();
-            for (File singleFile : files){
-                if(!singleFile.isHidden()){
-                    items+=1;
-                }
-            }
-            holder.tvSize.setText(String.valueOf(items)+ " Files");
 
-        }
-        else{
+            if (files != null) {
+                int items = 0;
+                for (File singleFile : files) {
+                    if (!singleFile.isHidden()) {
+                        items += 1;
+                    }
+                }
+                holder.tvSize.setText(String.valueOf(items) + " Files");
+            } else {
+                holder.tvSize.setText("0 Files");
+            }
+        } else {
             holder.tvSize.setText(Formatter.formatShortFileSize(context, file.get(position).length()));
         }
 //image
@@ -60,8 +77,17 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
         else if(file.get(position).getName().toLowerCase().endsWith(".png")){
             holder.imgFile.setImageResource(R.drawable.ic_image);
         }
-//pdf doc epub apk
+        else if(file.get(position).getName().toLowerCase().endsWith(".heic")){
+            holder.imgFile.setImageResource(R.drawable.ic_image);
+        }
+//pdf doc docx txt epub apk
         else if(file.get(position).getName().toLowerCase().endsWith(".doc")){
+            holder.imgFile.setImageResource(R.drawable.ic_docs);
+        }
+        else if(file.get(position).getName().toLowerCase().endsWith(".docx")){
+            holder.imgFile.setImageResource(R.drawable.ic_docs);
+        }
+        else if(file.get(position).getName().toLowerCase().endsWith(".txt")){
             holder.imgFile.setImageResource(R.drawable.ic_docs);
         }
         else if(file.get(position).getName().toLowerCase().endsWith(".pdf")){

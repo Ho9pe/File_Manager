@@ -384,6 +384,7 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
         });
 
     }
+
     class CustomAdapter extends BaseAdapter{
 
         @Override
@@ -429,13 +430,5 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
         }
     }
 
-
-
-
-    @NonNull
-    @Override
-    public CreationExtras getDefaultViewModelCreationExtras() {
-        return super.getDefaultViewModelCreationExtras();
-    }
 }
 

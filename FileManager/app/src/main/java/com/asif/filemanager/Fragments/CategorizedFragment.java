@@ -401,7 +401,7 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
 
                     case "Share":
                         String fileName = file.getName();
-                        Uri fileUri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".fileProvider", file);
+                        Uri fileUri = FileProvider.getUriForFile(getContext(), "com.asif.fileManager.fileProvider", file);
                         Intent shareIntent = new Intent(Intent.ACTION_SEND);
                         shareIntent.setType(getMimeType(fileUri));
                         shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
@@ -414,7 +414,6 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
         });
 
     }
-
 
     class CustomAdapter extends BaseAdapter{
 
@@ -461,11 +460,5 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
         }
     }
 
-
-    @NonNull
-    @Override
-    public CreationExtras getDefaultViewModelCreationExtras() {
-        return super.getDefaultViewModelCreationExtras();
-    }
 }
 
