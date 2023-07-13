@@ -36,20 +36,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
 
         holder.tvName.setText(file.get(position).getName());
         holder.tvName.setSelected(true);
-//        int items = 0;
-//        if(file.get(position).isDirectory()){
-//            File[] files = file.get(position).listFiles();
-//            for (File singleFile : files){
-//                if(!singleFile.isHidden()){
-//                    items+=1;
-//                }
-//            }
-//            holder.tvSize.setText(String.valueOf(items)+ " Files");
-//
-//        }
-//        else{
-//            holder.tvSize.setText(Formatter.formatShortFileSize(context, file.get(position).length()));
-//        }
+
         if (file.get(position).isDirectory()) {
             File[] files = file.get(position).listFiles();
 

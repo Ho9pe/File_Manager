@@ -170,7 +170,8 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
     }
 
 
-    public ArrayList<File> findFiles(File file) {
+    public ArrayList<File> findFiles(@NonNull File file)
+    {
         ArrayList<File> arrayList = new ArrayList<>();
         File[] files = file.listFiles();
 
@@ -394,12 +395,6 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
             }
         });
 
-    }
-
-    @NonNull
-    @Override
-    public CreationExtras getDefaultViewModelCreationExtras() {
-        return super.getDefaultViewModelCreationExtras();
     }
 
     class CustomAdapter extends BaseAdapter{

@@ -152,36 +152,37 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
         builder.show();
     }
 
-    public ArrayList<File> findFiles(File file)
-    {
+    public ArrayList<File> findFiles(@NonNull File file) {
         ArrayList<File> arrayList = new ArrayList<>();
         File[] files = file.listFiles();
 
-        for(File singleFile : files){
-            if(singleFile.isDirectory() && !singleFile.isHidden()){
-                arrayList.add(singleFile);
+        if (files != null) {
+            for (File singleFile : files) {
+                if (singleFile.isDirectory() && !singleFile.isHidden()) {
+                    arrayList.add(singleFile);
+                }
             }
-        }
-        for(File singleFile: files){
-            if(     singleFile.getName().toLowerCase().endsWith(".jpeg") ||
-                    singleFile.getName().toLowerCase().endsWith(".jpg") ||
-                    singleFile.getName().toLowerCase().endsWith(".png") ||
+            for (File singleFile : files) {
+                if (singleFile.getName().toLowerCase().endsWith(".jpeg") ||
+                        singleFile.getName().toLowerCase().endsWith(".jpg") ||
+                        singleFile.getName().toLowerCase().endsWith(".png") ||
 
-                    singleFile.getName().toLowerCase().endsWith(".mp3") ||
-                    singleFile.getName().toLowerCase().endsWith(".mp4") ||
-                    singleFile.getName().toLowerCase().endsWith(".mkv") ||
+                        singleFile.getName().toLowerCase().endsWith(".mp3") ||
+                        singleFile.getName().toLowerCase().endsWith(".mp4") ||
+                        singleFile.getName().toLowerCase().endsWith(".mkv") ||
 
-                    singleFile.getName().toLowerCase().endsWith(".pdf") ||
-                    singleFile.getName().toLowerCase().endsWith(".epub") ||
-                    singleFile.getName().toLowerCase().endsWith(".doc") ||
-                    singleFile.getName().toLowerCase().endsWith(".apk") ||
+                        singleFile.getName().toLowerCase().endsWith(".pdf") ||
+                        singleFile.getName().toLowerCase().endsWith(".epub") ||
+                        singleFile.getName().toLowerCase().endsWith(".doc") ||
+                        singleFile.getName().toLowerCase().endsWith(".apk") ||
 
-                    singleFile.getName().toLowerCase().endsWith(".7z") ||
-                    singleFile.getName().toLowerCase().endsWith(".rar") ||
-                    singleFile.getName().toLowerCase().endsWith(".zip"))
-            {
-                arrayList.add(singleFile);
+                        singleFile.getName().toLowerCase().endsWith(".7z") ||
+                        singleFile.getName().toLowerCase().endsWith(".rar") ||
+                        singleFile.getName().toLowerCase().endsWith(".zip")) {
+                    arrayList.add(singleFile);
+                }
             }
+
         }
         return arrayList;
     }

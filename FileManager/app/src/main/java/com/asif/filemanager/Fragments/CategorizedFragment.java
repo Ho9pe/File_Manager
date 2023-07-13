@@ -93,7 +93,7 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
     }
 
 
-    public ArrayList<File> findFiles(File file) {
+    public ArrayList<File> findFiles(@NonNull File file) {
         ArrayList<File> arrayList = new ArrayList<>();
         File[] files = file.listFiles();
         if (files != null) {
@@ -193,10 +193,10 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
         if (files != null) {
             Arrays.sort(files, (file1, file2) -> Long.compare(file2.lastModified(), file1.lastModified()));
 
-            // Add the last 50 downloaded files
+            // Add the last 60 downloaded files
             int count = 0;
             for (File file : files) {
-                if (count >= 50) {
+                if (count >= 60) {
                     break;
                 }
 
@@ -215,7 +215,6 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
             fileList = new ArrayList<>();
-//            fileList.addAll(findFiles(Environment.getExternalStorageDirectory()));
             Bundle bundle = this.getArguments();
             fileType = bundle.getString("fileType");
 
