@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -14,9 +13,9 @@ import java.io.File;
 import java.util.List;
 
 public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
-    private Context context;
-    private List<File> file;
-    private OnFileSelectedListener listener;
+    private final Context context;
+    private final List<File> file;
+    private final OnFileSelectedListener listener;
 
 
     public FileAdapter(Context context, List<File> file,OnFileSelectedListener listener) {
@@ -47,7 +46,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
                         items += 1;
                     }
                 }
-                holder.tvSize.setText(String.valueOf(items) + " Files");
+                holder.tvSize.setText(items+ " Files");
             } else {
                 holder.tvSize.setText("0 Files");
             }
@@ -109,18 +108,10 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
         else{
             holder.imgFile.setImageResource(R.drawable.ic_folder);
         }
-        holder.container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onFileClicked(file.get(holder.getAdapterPosition()));
-            }
-        });
-        holder.container.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                listener.onFileLongClicked(file.get(holder.getAdapterPosition()), position);
-                return true;
-            }
+        holder.container.setOnClickListener(view -> listener.onFileClicked(file.get(holder.getAdapterPosition())));
+        holder.container.setOnLongClickListener(view -> {
+            listener.onFileLongClicked(file.get(holder.getAdapterPosition()), position);
+            return true;
         });
 
     }
