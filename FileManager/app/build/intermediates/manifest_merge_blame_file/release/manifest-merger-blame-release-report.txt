@@ -1,0 +1,124 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.asif.filemanager"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+8-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="33" />
+9-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+11-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:5:5-97
+11-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:5:22-78
+12    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+12-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:6:5-96
+12-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:6:22-77
+13    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+13-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:7:5-98
+13-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:7:22-79
+14
+15    <permission
+15-->[androidx.core:core:1.9.0] C:\Users\ROG\.gradle\caches\transforms-3\55dedc70b95a473650eda30d4efd0f99\transformed\core-1.9.0\AndroidManifest.xml:22:5-24:47
+16        android:name="com.asif.filemanager.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+16-->[androidx.core:core:1.9.0] C:\Users\ROG\.gradle\caches\transforms-3\55dedc70b95a473650eda30d4efd0f99\transformed\core-1.9.0\AndroidManifest.xml:23:9-81
+17        android:protectionLevel="signature" />
+17-->[androidx.core:core:1.9.0] C:\Users\ROG\.gradle\caches\transforms-3\55dedc70b95a473650eda30d4efd0f99\transformed\core-1.9.0\AndroidManifest.xml:24:9-44
+18
+19    <uses-permission android:name="com.asif.filemanager.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+19-->[androidx.core:core:1.9.0] C:\Users\ROG\.gradle\caches\transforms-3\55dedc70b95a473650eda30d4efd0f99\transformed\core-1.9.0\AndroidManifest.xml:26:5-97
+19-->[androidx.core:core:1.9.0] C:\Users\ROG\.gradle\caches\transforms-3\55dedc70b95a473650eda30d4efd0f99\transformed\core-1.9.0\AndroidManifest.xml:26:22-94
+20
+21    <application
+21-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:10:5-43:19
+22        android:allowBackup="true"
+22-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:11:9-35
+23        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+23-->[androidx.core:core:1.9.0] C:\Users\ROG\.gradle\caches\transforms-3\55dedc70b95a473650eda30d4efd0f99\transformed\core-1.9.0\AndroidManifest.xml:28:18-86
+24        android:dataExtractionRules="@xml/data_extraction_rules"
+24-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:12:9-65
+25        android:extractNativeLibs="false"
+26        android:fullBackupContent="@xml/backup_rules"
+26-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:13:9-54
+27        android:icon="@mipmap/ic_launcher"
+27-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:14:9-43
+28        android:label="@string/app_name"
+28-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:15:9-41
+29        android:requestLegacyExternalStorage="true"
+29-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:20:9-52
+30        android:roundIcon="@mipmap/ic_launcher_round"
+30-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:16:9-54
+31        android:supportsRtl="true"
+31-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:17:9-35
+32        android:theme="@style/Theme.FileManager" >
+32-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:18:9-49
+33        <activity
+33-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:22:9-30:20
+34            android:name="com.asif.filemanager.MainActivity"
+34-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:23:13-41
+35            android:exported="true" >
+35-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:24:13-36
+36            <intent-filter>
+36-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:25:13-29:29
+37                <action android:name="android.intent.action.MAIN" />
+37-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:26:17-69
+37-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:26:25-66
+38
+39                <category android:name="android.intent.category.LAUNCHER" />
+39-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:28:17-77
+39-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:28:27-74
+40            </intent-filter>
+41        </activity>
+42
+43        <provider
+43-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:31:9-41:20
+44            android:name="androidx.core.content.FileProvider"
+44-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:33:13-62
+45            android:authorities="com.asif.fileManager.fileProvider"
+45-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:32:13-68
+46            android:exported="false"
+46-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:34:13-37
+47            android:grantUriPermissions="true" >
+47-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:35:13-47
+48            <meta-data
+48-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:36:13-40:25
+49                android:name="android.support.FILE_PROVIDER_PATHS"
+49-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:37:17-67
+50                android:resource="@xml/provider_path" >
+50-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:38:17-54
+51            </meta-data>
+52        </provider>
+53
+54        <activity
+54-->[com.karumi:dexter:6.2.3] C:\Users\ROG\.gradle\caches\transforms-3\c8fc57f7324fd3f00e093cf23ce10d88\transformed\dexter-6.2.3\AndroidManifest.xml:27:9-29:72
+55            android:name="com.karumi.dexter.DexterActivity"
+55-->[com.karumi:dexter:6.2.3] C:\Users\ROG\.gradle\caches\transforms-3\c8fc57f7324fd3f00e093cf23ce10d88\transformed\dexter-6.2.3\AndroidManifest.xml:28:13-60
+56            android:theme="@style/Dexter.Internal.Theme.Transparent" />
+56-->[com.karumi:dexter:6.2.3] C:\Users\ROG\.gradle\caches\transforms-3\c8fc57f7324fd3f00e093cf23ce10d88\transformed\dexter-6.2.3\AndroidManifest.xml:29:13-69
+57
+58        <provider
+58-->[androidx.emoji2:emoji2:1.2.0] C:\Users\ROG\.gradle\caches\transforms-3\58734ab3db9d01442ffac75a0ea2bc68\transformed\emoji2-1.2.0\AndroidManifest.xml:24:9-32:20
+59            android:name="androidx.startup.InitializationProvider"
+59-->[androidx.emoji2:emoji2:1.2.0] C:\Users\ROG\.gradle\caches\transforms-3\58734ab3db9d01442ffac75a0ea2bc68\transformed\emoji2-1.2.0\AndroidManifest.xml:25:13-67
+60            android:authorities="com.asif.filemanager.androidx-startup"
+60-->[androidx.emoji2:emoji2:1.2.0] C:\Users\ROG\.gradle\caches\transforms-3\58734ab3db9d01442ffac75a0ea2bc68\transformed\emoji2-1.2.0\AndroidManifest.xml:26:13-68
+61            android:exported="false" >
+61-->[androidx.emoji2:emoji2:1.2.0] C:\Users\ROG\.gradle\caches\transforms-3\58734ab3db9d01442ffac75a0ea2bc68\transformed\emoji2-1.2.0\AndroidManifest.xml:27:13-37
+62            <meta-data
+62-->[androidx.emoji2:emoji2:1.2.0] C:\Users\ROG\.gradle\caches\transforms-3\58734ab3db9d01442ffac75a0ea2bc68\transformed\emoji2-1.2.0\AndroidManifest.xml:29:13-31:52
+63                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+63-->[androidx.emoji2:emoji2:1.2.0] C:\Users\ROG\.gradle\caches\transforms-3\58734ab3db9d01442ffac75a0ea2bc68\transformed\emoji2-1.2.0\AndroidManifest.xml:30:17-75
+64                android:value="androidx.startup" />
+64-->[androidx.emoji2:emoji2:1.2.0] C:\Users\ROG\.gradle\caches\transforms-3\58734ab3db9d01442ffac75a0ea2bc68\transformed\emoji2-1.2.0\AndroidManifest.xml:31:17-49
+65            <meta-data
+65-->[androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\ROG\.gradle\caches\transforms-3\75d35fda4271de3dc184847093d1a2b0\transformed\lifecycle-process-2.4.1\AndroidManifest.xml:31:13-33:52
+66                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+66-->[androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\ROG\.gradle\caches\transforms-3\75d35fda4271de3dc184847093d1a2b0\transformed\lifecycle-process-2.4.1\AndroidManifest.xml:32:17-78
+67                android:value="androidx.startup" />
+67-->[androidx.lifecycle:lifecycle-process:2.4.1] C:\Users\ROG\.gradle\caches\transforms-3\75d35fda4271de3dc184847093d1a2b0\transformed\lifecycle-process-2.4.1\AndroidManifest.xml:33:17-49
+68        </provider>
+69    </application>
+70
+71</manifest>

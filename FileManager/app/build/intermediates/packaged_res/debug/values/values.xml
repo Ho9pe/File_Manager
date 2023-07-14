@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="Blueish">#9999FF</color>
+    <color name="Green">#00B386</color>
+    <color name="black">#FF000000</color>
+    <color name="black2">#303030</color>
+    <color name="green">#00F386</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="Close_Drawer">Close Navigation Drawer</string>
+    <string name="Open_Drawer">Open Navigation Drawer</string>
+    <string name="app_name">File Manager</string>
+    <style name="Base.Theme.FileManager" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        
+    </style>
+    <style name="Theme.FileManager" parent="Base.Theme.FileManager"/>
+</resources>
