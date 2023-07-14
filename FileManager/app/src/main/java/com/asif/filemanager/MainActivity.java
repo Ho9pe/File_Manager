@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout drawerLayout;
 
     private NavigationView navigationView;
+
 
 
     @Override
@@ -79,25 +81,31 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 super.onBackPressed();
             }
         }
+
+        MenuItem homeMenuItem = navigationView.getMenu().findItem(R.id.nav_home);
+        if (homeMenuItem != null) {
+            homeMenuItem.setChecked(true);
+        }
         updateDrawerSelection();
     }
     private void updateDrawerSelection() {
-        int selectedItem = R.id.nav_home;
-
-        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
-        if (backStackEntryCount > 0) {
-            String fragmentTag = getSupportFragmentManager().getBackStackEntryAt(backStackEntryCount - 1).getName();
-            if (fragmentTag != null) {
-                switch (fragmentTag) {
-                    case "InternalFragment":
-                        selectedItem = R.id.nav_internal;
-                        break;
-                    case "CardFragment":
-                        selectedItem = R.id.nav_card;
-                        break;
+        MenuItem selectedItem = navigationView.getCheckedItem();
+        if (selectedItem != null) {
+            int selectedItemId = selectedItem.getItemId();
+            if (selectedItemId == R.id.nav_internal || selectedItemId == R.id.nav_card) {
+                navigationView.setCheckedItem(R.id.nav_home);
+            } else {
+                Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+                if (currentFragment instanceof InternalFragment) {
+                    navigationView.setCheckedItem(R.id.nav_internal);
+                } else if (currentFragment instanceof CardFragment) {
+                    navigationView.setCheckedItem(R.id.nav_card);
+                } else {
+                    navigationView.setCheckedItem(R.id.nav_home);
                 }
             }
         }
-        navigationView.setCheckedItem(selectedItem);
     }
+
+
 }
