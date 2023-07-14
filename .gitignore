@@ -11,3 +11,10 @@ FileManager/.gradle/8.0/executionHistory/executionHistory.lock
 *.bin
 *.lock
 *.txt
+FileManager/.gradle/8.0/executionHistory/executionHistory.bin
+FileManager/.gradle/8.0/executionHistory/executionHistory.lock
+FileManager/.gradle/8.0/fileHashes/fileHashes.bin
+FileManager/.gradle/8.0/fileHashes/fileHashes.lock
+FileManager/.gradle/buildOutputCleanup/buildOutputCleanup.lock
+FileManager/app/build/intermediates/apk/debug/app-debug.apk
+FileManager/app/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt
