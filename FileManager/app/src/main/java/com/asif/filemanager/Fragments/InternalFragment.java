@@ -116,11 +116,11 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                     arrayList.add(singleFile);
                 }
             }
-
             for (File singleFile : files) {
                 if (singleFile.getName().toLowerCase().endsWith(".jpeg") ||
                         singleFile.getName().toLowerCase().endsWith(".jpg") ||
                         singleFile.getName().toLowerCase().endsWith(".png") ||
+                        singleFile.getName().toLowerCase().endsWith(".heic") ||
 
                         singleFile.getName().toLowerCase().endsWith(".mp3") ||
                         singleFile.getName().toLowerCase().endsWith(".mp4") ||
@@ -129,6 +129,8 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                         singleFile.getName().toLowerCase().endsWith(".pdf") ||
                         singleFile.getName().toLowerCase().endsWith(".epub") ||
                         singleFile.getName().toLowerCase().endsWith(".doc") ||
+                        singleFile.getName().toLowerCase().endsWith(".docx") ||
+                        singleFile.getName().toLowerCase().endsWith(".txt") ||
                         singleFile.getName().toLowerCase().endsWith(".apk") ||
 
                         singleFile.getName().toLowerCase().endsWith(".7z") ||

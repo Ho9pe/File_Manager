@@ -54,7 +54,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
         } else {
             holder.tvSize.setText(Formatter.formatShortFileSize(context, file.get(position).length()));
         }
-//image
+//jpeg jpg png heic
         if(file.get(position).getName().toLowerCase().endsWith(".jpeg")){
             holder.imgFile.setImageResource(R.drawable.ic_image);
         }
@@ -86,7 +86,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
         else if(file.get(position).getName().toLowerCase().endsWith(".apk")){
             holder.imgFile.setImageResource(R.drawable.ic_android);
         }
-//music video
+//mp3 mp4 mkv
         else if(file.get(position).getName().toLowerCase().endsWith(".mp3")){
             holder.imgFile.setImageResource(R.drawable.ic_music);
         }
@@ -96,7 +96,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
         else if(file.get(position).getName().toLowerCase().endsWith(".mkv")){
             holder.imgFile.setImageResource(R.drawable.ic_player);
         }
-//compressed files
+//7z rar zip
         else if(file.get(position).getName().toLowerCase().endsWith(".7z")){
             holder.imgFile.setImageResource(R.drawable.ic_7z);
         }

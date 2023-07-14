@@ -142,7 +142,7 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
 
     private boolean isImageFile(File file) {
         String extension = getFileExtension(file);
-        return extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("png");
+        return extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("png")|| extension.equalsIgnoreCase("heic");
     }
 
     private boolean isVideoFile(File file) {
@@ -157,7 +157,7 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
 
     private boolean isPdfOrDocFile(File file) {
         String extension = getFileExtension(file);
-        return extension.equalsIgnoreCase("pdf") || extension.equalsIgnoreCase("doc");
+        return extension.equalsIgnoreCase("pdf") || extension.equalsIgnoreCase("doc") || extension.equalsIgnoreCase("docx") || extension.equalsIgnoreCase("txt");
     }
 
     private boolean isApkFile(File file) {
@@ -168,12 +168,13 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
     private boolean isDownloadFile(File file) {
         String extension = getFileExtension(file);
         return extension.equalsIgnoreCase("jpeg") || extension.equalsIgnoreCase("jpg") ||
-                extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("mp3") ||
-                extension.equalsIgnoreCase("mp4") || extension.equalsIgnoreCase("mkv") ||
-                extension.equalsIgnoreCase("pdf") || extension.equalsIgnoreCase("doc") ||
-                extension.equalsIgnoreCase("apk") || extension.equalsIgnoreCase("7z") ||
-                extension.equalsIgnoreCase("rar") || extension.equalsIgnoreCase("zip") ||
-                extension.equalsIgnoreCase("epub");
+                extension.equalsIgnoreCase("heic") || extension.equalsIgnoreCase("png") ||
+                extension.equalsIgnoreCase("mp3") || extension.equalsIgnoreCase("mp4") ||
+                extension.equalsIgnoreCase("mkv") || extension.equalsIgnoreCase("pdf") ||
+                extension.equalsIgnoreCase("doc") || extension.equalsIgnoreCase("docx") ||
+                extension.equalsIgnoreCase("txt") || extension.equalsIgnoreCase("apk") ||
+                extension.equalsIgnoreCase("7z") || extension.equalsIgnoreCase("rar") ||
+                extension.equalsIgnoreCase("zip") || extension.equalsIgnoreCase("epub");
     }
 
     private String getFileExtension(File file) {

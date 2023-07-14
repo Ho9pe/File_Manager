@@ -19,6 +19,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private DrawerLayout drawerLayout;
 
+    private NavigationView navigationView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.Open_Drawer, R.string.Close_Drawer);
@@ -63,14 +66,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+
+
     @Override
     public void onBackPressed() {
-        getSupportFragmentManager().popBackStackImmediate();
-        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
-            drawerLayout.closeDrawer(GravityCompat.START);
-        }else{
-            super.onBackPressed();
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStackImmediate();
+        } else {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
+            }
         }
+        updateDrawerSelection();
     }
+    private void updateDrawerSelection() {
+        int selectedItem = R.id.nav_home;
 
+        int backStackEntryCount = getSupportFragmentManager().getBackStackEntryCount();
+        if (backStackEntryCount > 0) {
+            String fragmentTag = getSupportFragmentManager().getBackStackEntryAt(backStackEntryCount - 1).getName();
+            if (fragmentTag != null) {
+                switch (fragmentTag) {
+                    case "InternalFragment":
+                        selectedItem = R.id.nav_internal;
+                        break;
+                    case "CardFragment":
+                        selectedItem = R.id.nav_card;
+                        break;
+                }
+            }
+        }
+        navigationView.setCheckedItem(selectedItem);
+    }
 }

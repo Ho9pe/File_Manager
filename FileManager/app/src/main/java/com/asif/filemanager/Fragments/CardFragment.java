@@ -197,7 +197,7 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
     }
 
     @Override
-    public void onFileClicked(File file) {
+    public void onFileClicked(@NonNull File file) {
         if(file.isDirectory()){
             Bundle bundle = new Bundle();
             bundle.putString("path", file.getAbsolutePath());
