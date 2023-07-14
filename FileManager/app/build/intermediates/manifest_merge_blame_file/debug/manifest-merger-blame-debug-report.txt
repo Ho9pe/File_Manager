@@ -43,14 +43,14 @@
 26        android:extractNativeLibs="false"
 27        android:fullBackupContent="@xml/backup_rules"
 27-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:13:9-54
-28        android:icon="@mipmap/ic_launcher"
-28-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:14:9-43
+28        android:icon="@mipmap/ic_launcher2"
+28-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:14:9-44
 29        android:label="@string/app_name"
 29-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:15:9-41
 30        android:requestLegacyExternalStorage="true"
 30-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:20:9-52
-31        android:roundIcon="@mipmap/ic_launcher_round"
-31-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:16:9-54
+31        android:roundIcon="@mipmap/ic_launcher2_round"
+31-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:16:9-55
 32        android:supportsRtl="true"
 32-->C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:17:9-35
 33        android:testOnly="true"

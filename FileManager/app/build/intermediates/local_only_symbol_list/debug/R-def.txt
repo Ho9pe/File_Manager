@@ -26,6 +26,8 @@ drawable ic_epub
 drawable ic_folder
 drawable ic_home
 drawable ic_image
+drawable ic_launcher2
+drawable ic_launcher2_background
 drawable ic_launcher_background
 drawable ic_launcher_foreground
 drawable ic_move
@@ -79,6 +81,9 @@ layout option_dialog
 layout option_layout
 menu nav_menu
 mipmap ic_launcher
+mipmap ic_launcher2
+mipmap ic_launcher2_foreground
+mipmap ic_launcher2_round
 mipmap ic_launcher_round
 string Close_Drawer
 string Open_Drawer

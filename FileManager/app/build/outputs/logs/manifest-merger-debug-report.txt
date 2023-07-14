@@ -105,11 +105,11 @@ MERGED from [androidx.versionedparcelable:versionedparcelable:1.1.1] C:\Users\RO
 	android:fullBackupContent
 		ADDED from C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:13:9-54
 	android:roundIcon
-		ADDED from C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:16:9-54
+		ADDED from C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:16:9-55
 	tools:targetApi
 		ADDED from C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:19:9-29
 	android:icon
-		ADDED from C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:14:9-43
+		ADDED from C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:14:9-44
 	android:allowBackup
 		ADDED from C:\Users\ROG\AndroidStudioProjects\FileManager\app\src\main\AndroidManifest.xml:11:9-35
 	android:theme

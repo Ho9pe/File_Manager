@@ -2470,6 +2470,8 @@ int drawable ic_folder 0x7f07007d
 int drawable ic_home 0x7f07007e
 int drawable ic_image 0x7f07007f
 int drawable ic_keyboard_black_24dp 0x7f070080
+int drawable ic_launcher2 0x7f0700c7
+int drawable ic_launcher2_background 0x7f0700c8
 int drawable ic_launcher_background 0x7f070081
 int drawable ic_launcher_foreground 0x7f070082
 int drawable ic_m3_chip_check 0x7f070083
@@ -3219,6 +3221,9 @@ int layout text_view_with_theme_line_height 0x7f0b0079
 int layout text_view_without_line_height 0x7f0b007a
 int menu nav_menu 0x7f0c0000
 int mipmap ic_launcher 0x7f0d0000
+int mipmap ic_launcher2 0x7f0d0002
+int mipmap ic_launcher2_foreground 0x7f0d0003
+int mipmap ic_launcher2_round 0x7f0d0004
 int mipmap ic_launcher_round 0x7f0d0001
 int plurals mtrl_badge_content_description 0x7f0e0000
 int string Close_Drawer 0x7f0f0000

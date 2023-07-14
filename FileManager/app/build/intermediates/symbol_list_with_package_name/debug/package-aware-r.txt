@@ -2471,6 +2471,8 @@ drawable ic_folder
 drawable ic_home
 drawable ic_image
 drawable ic_keyboard_black_24dp
+drawable ic_launcher2
+drawable ic_launcher2_background
 drawable ic_launcher_background
 drawable ic_launcher_foreground
 drawable ic_m3_chip_check
@@ -3220,6 +3222,9 @@ layout text_view_with_theme_line_height
 layout text_view_without_line_height
 menu nav_menu
 mipmap ic_launcher
+mipmap ic_launcher2
+mipmap ic_launcher2_foreground
+mipmap ic_launcher2_round
 mipmap ic_launcher_round
 plurals mtrl_badge_content_description
 string Close_Drawer

@@ -1,5 +1,13 @@
 [
     {
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-hdpi_ic_launcher2_round.png.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-hdpi\\ic_launcher2_round.png"
+    },
+    {
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-anydpi-v26_ic_launcher2_round.xml.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-anydpi-v26\\ic_launcher2_round.xml"
+    },
+    {
         "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\drawable_ic_launcher_background.xml.flat",
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\drawable\\ic_launcher_background.xml"
     },
@@ -32,6 +40,18 @@
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\menu\\nav_menu.xml"
     },
     {
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\drawable_ic_paste.xml.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\drawable\\ic_paste.xml"
+    },
+    {
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-xxhdpi_ic_launcher2.png.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-xxhdpi\\ic_launcher2.png"
+    },
+    {
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-xxhdpi_ic_launcher2_round.png.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-xxhdpi\\ic_launcher2_round.png"
+    },
+    {
         "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-hdpi_ic_launcher.webp.flat",
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-hdpi\\ic_launcher.webp"
     },
@@ -52,12 +72,20 @@
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\drawable\\card.png"
     },
     {
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\drawable_ic_launcher2_background.xml.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\drawable\\ic_launcher2_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-xxhdpi_ic_launcher2_foreground.png.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-xxhdpi\\ic_launcher2_foreground.png"
+    },
+    {
         "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-xhdpi_ic_launcher.webp.flat",
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-xhdpi\\ic_launcher.webp"
     },
     {
-        "merged": "com.asif.filemanager.app-merged_res-29:/drawable_ic_copy.xml.flat",
-        "source": "com.asif.filemanager.app-main-31:/drawable/ic_copy.xml"
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-xxxhdpi_ic_launcher2_round.png.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-xxxhdpi\\ic_launcher2_round.png"
     },
     {
         "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\drawable_home.png.flat",
@@ -80,6 +108,10 @@
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\drawable\\ic_downloads.xml"
     },
     {
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-xhdpi_ic_launcher2_round.png.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-xhdpi\\ic_launcher2_round.png"
+    },
+    {
         "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\drawable_ic_share.xml.flat",
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\drawable\\ic_share.xml"
     },
@@ -90,6 +122,14 @@
     {
         "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\drawable_folder.png.flat",
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\drawable\\folder.png"
+    },
+    {
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-xxxhdpi_ic_launcher2_foreground.png.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-xxxhdpi\\ic_launcher2_foreground.png"
+    },
+    {
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\drawable_ic_copy.xml.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\drawable\\ic_copy.xml"
     },
     {
         "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\drawable_ic_open.xml.flat",
@@ -114,6 +154,10 @@
     {
         "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\xml_backup_rules.xml.flat",
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\xml\\backup_rules.xml"
+    },
+    {
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-xhdpi_ic_launcher2.png.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-xhdpi\\ic_launcher2.png"
     },
     {
         "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\drawable_ic_pdf.xml.flat",
@@ -164,12 +208,20 @@
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\drawable\\ic_player.png"
     },
     {
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-mdpi_ic_launcher2_round.png.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-mdpi\\ic_launcher2_round.png"
+    },
+    {
         "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\drawable_ic_recent.xml.flat",
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\drawable\\ic_recent.xml"
     },
     {
         "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-xxxhdpi_ic_launcher.webp.flat",
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-xxxhdpi\\ic_launcher.webp"
+    },
+    {
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-hdpi_ic_launcher2_foreground.png.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-hdpi\\ic_launcher2_foreground.png"
     },
     {
         "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\drawable_ic_rar.png.flat",
@@ -184,12 +236,20 @@
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-anydpi-v26\\ic_launcher.xml"
     },
     {
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-mdpi_ic_launcher2_foreground.png.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-mdpi\\ic_launcher2_foreground.png"
+    },
+    {
         "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-xxhdpi_ic_launcher_round.webp.flat",
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-xxhdpi\\ic_launcher_round.webp"
     },
     {
         "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\drawable-v24_ic_launcher_foreground.xml.flat",
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\drawable-v24\\ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\drawable_ic_launcher2.png.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\drawable\\ic_launcher2.png"
     },
     {
         "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\drawable_ic_folder.xml.flat",
@@ -204,6 +264,14 @@
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\drawable\\ic_android.xml"
     },
     {
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-hdpi_ic_launcher2.png.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-hdpi\\ic_launcher2.png"
+    },
+    {
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-anydpi-v26_ic_launcher2.xml.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-anydpi-v26\\ic_launcher2.xml"
+    },
+    {
         "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\drawable_ic_play.xml.flat",
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\drawable\\ic_play.xml"
     },
@@ -212,8 +280,8 @@
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\layout\\fragment_internal.xml"
     },
     {
-        "merged": "com.asif.filemanager.app-merged_res-29:/drawable_ic_paste.xml.flat",
-        "source": "com.asif.filemanager.app-main-31:/drawable/ic_paste.xml"
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-mdpi_ic_launcher2.png.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-mdpi\\ic_launcher2.png"
     },
     {
         "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-xxhdpi_ic_launcher.webp.flat",
@@ -228,6 +296,10 @@
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\drawable\\ic_epub.png"
     },
     {
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-xhdpi_ic_launcher2_foreground.png.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-xhdpi\\ic_launcher2_foreground.png"
+    },
+    {
         "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\drawable_ic_dropdown.xml.flat",
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\drawable\\ic_dropdown.xml"
     },
@@ -236,8 +308,16 @@
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\drawable\\ic_about.xml"
     },
     {
+        "merged": "com.asif.filemanager.app-merged_res-29:/layout_nav_header.xml.flat",
+        "source": "com.asif.filemanager.app-main-31:/layout/nav_header.xml"
+    },
+    {
         "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\layout_fragment_home.xml.flat",
         "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\layout\\fragment_home.xml"
+    },
+    {
+        "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\mipmap-xxxhdpi_ic_launcher2.png.flat",
+        "source": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-main-31:\\mipmap-xxxhdpi\\ic_launcher2.png"
     },
     {
         "merged": "C:\\Users\\ROG\\.gradle\\daemon\\8.0\\com.asif.filemanager.app-merged_res-29:\\drawable_sd_card.png.flat",
