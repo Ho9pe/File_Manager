@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -23,11 +24,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.asif.filemanager.DatabaseHelper;
 import com.asif.filemanager.FileAdapter;
 import com.asif.filemanager.FileOpener;
 import com.asif.filemanager.OnFileSelectedListener;
@@ -71,6 +74,9 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
 
         runtimePermission();
 
+        // Insert file information into the database when the Home page is accessed
+        insertFilesIntoDatabase();
+
         return view;
     }
 
@@ -91,6 +97,69 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
         }).check();
     }
 
+
+    // Insert file information into the database when the Home page is accessed
+    private void insertFilesIntoDatabase() {
+        if (isStoragePermissionGranted()) {
+            DatabaseHelper dbHelper = new DatabaseHelper(getContext());
+            if (dbHelper.isEmpty()) {
+                ArrayList<File> files = findFiles(Environment.getExternalStorageDirectory());
+                for (File file : files) {
+                    String name = file.getName();
+                    String path = file.getAbsolutePath();
+                    String type = getFileType(name);
+                    long size = file.length();
+                    long lastModified = file.lastModified();
+
+                    dbHelper.insertFile(name, path, type, size, lastModified);
+                }
+            }
+        }
+    }
+    private boolean isStoragePermissionGranted() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //Determination of the file type based on the file name
+    private String getFileType(String fileName) {
+        String fileExtension = getFileExtension(fileName);
+        if (fileExtension != null) {
+            switch (fileExtension.toLowerCase()) {
+                case "jpg":
+                case "jpeg":
+                case "png":
+                case "heic":
+                    return "image";
+                case "mp4":
+                case "mkv":
+                    return "video";
+                case "mp3":
+                    return "music";
+                case "pdf":
+                case "doc":
+                case "docx":
+                case "txt":
+                    return "docs/pdf";
+                case "apk":
+                    return "apk";
+                default:
+                    return "unknown";
+            }
+        }
+
+        return "unknown";
+    }
+    private String getFileExtension(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex != -1 && dotIndex < fileName.length() - 1) {
+            return fileName.substring(dotIndex + 1);
+        }
+        return null;
+    }
 
     public ArrayList<File> findFiles(@NonNull File file) {
         ArrayList<File> arrayList = new ArrayList<>();
@@ -210,26 +279,57 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
         return downloadedFiles;
     }
     String fileType;
+  /*
     private void displayFiles() {
-            recyclerView = view.findViewById(R.id.recycler_internal);
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-            fileList = new ArrayList<>();
-            Bundle bundle = this.getArguments();
-            fileType = bundle.getString("fileType");
+        recyclerView = view.findViewById(R.id.recycler_internal);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        fileList = new ArrayList<>();
+        Bundle bundle = this.getArguments();
+        fileType = bundle.getString("fileType");
 
-            if (fileType.equals("downloads")) {
-                fileList.addAll(findDownloadedFiles());
-            } else {
-                fileList.addAll(findFiles(Environment.getExternalStorageDirectory()));
-            }
-            fileList.sort(Comparator.comparingLong(File::lastModified).reversed());
-            if(fileType != "downloads") {
-                fileList = new ArrayList<>(fileList.subList(0, Math.min(fileList.size(), 20)));
-            }
-            fileAdapter = new FileAdapter(getContext(), fileList, this);
-            recyclerView.setAdapter(fileAdapter);
+        if (fileType.equals("downloads")) {
+            fileList.addAll(findDownloadedFiles());
+        } else {
+            fileList.addAll(findFiles(Environment.getExternalStorageDirectory()));
+        }
+        fileList.sort(Comparator.comparingLong(File::lastModified).reversed());
+        if(fileType != "downloads") {
+            fileList = new ArrayList<>(fileList.subList(0, Math.min(fileList.size(), 20)));
+        }
+        fileAdapter = new FileAdapter(getContext(), fileList, this);
+        recyclerView.setAdapter(fileAdapter);
     }
+*/
+    private void displayFiles() {
+        recyclerView = view.findViewById(R.id.recycler_internal);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        fileList = new ArrayList<>();
+        Bundle bundle = this.getArguments();
+        fileType = bundle.getString("fileType");
+
+        if (fileType.equals("downloads")) {
+            fileList.addAll(findDownloadedFiles());
+        } else {
+            DatabaseHelper dbHelper = new DatabaseHelper(getContext());
+
+            List<DatabaseHelper.FileModel> dbFileList = dbHelper.getAllFiles();
+            for (DatabaseHelper.FileModel fileModel : dbFileList) {
+                if (fileType.equals(getFileType(fileModel.getName()))) {
+                    fileList.add(new File(fileModel.getPath()));
+                }
+            }
+        }
+
+        fileList.sort(Comparator.comparingLong(File::lastModified).reversed());
+        if (!fileType.equals("downloads")) {
+            fileList = new ArrayList<>(fileList.subList(0, Math.min(fileList.size(), 20)));
+        }
+        fileAdapter = new FileAdapter(getContext(), fileList, this);
+        recyclerView.setAdapter(fileAdapter);
+    }
+
 
     @Override
     public void onFileClicked(File file) {

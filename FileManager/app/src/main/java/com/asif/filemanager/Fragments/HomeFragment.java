@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -24,15 +25,18 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.asif.filemanager.DatabaseHelper;
 import com.asif.filemanager.FileAdapter;
 import com.asif.filemanager.FileOpener;
 import com.asif.filemanager.OnFileSelectedListener;
 import com.asif.filemanager.R;
+import com.google.android.material.snackbar.Snackbar;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -45,6 +49,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -149,7 +154,87 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
         });
         runtimePermission();
 
+        // Insert file information into the database when the Home page is accessed
+        insertFilesIntoDatabase();
+
         return view;
+    }
+
+    // Insert file information into the database when the Home page is accessed
+    private void insertFilesIntoDatabase() {
+        if (isStoragePermissionGranted()) {
+            DatabaseHelper dbHelper = new DatabaseHelper(getContext());
+            if (dbHelper.isEmpty()) {
+                ArrayList<File> files = findFiles(Environment.getExternalStorageDirectory());
+                for (File file : files) {
+                    String name = file.getName();
+                    String path = file.getAbsolutePath();
+                    String type = getFileType(name);
+                    long size = file.length();
+                    long lastModified = file.lastModified();
+
+                    dbHelper.insertFile(name, path, type, size, lastModified);
+                }
+            }
+        }
+    }
+//    private boolean filesHaveChangedSinceLastInsertion(DatabaseHelper dbHelper) {
+//        long lastInsertedFileDate = dbHelper.getLastInsertedFileDate();
+//        ArrayList<File> files = findFiles(Environment.getExternalStorageDirectory());
+//        for (File file : files) {
+//            if (file.lastModified() > lastInsertedFileDate) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+
+    private boolean isStoragePermissionGranted() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //Determination of the file type based on the file name
+    private String getFileType(String fileName) {
+        String fileExtension = getFileExtension(fileName);
+        if (fileExtension != null) {
+            switch (fileExtension.toLowerCase()) {
+                case "jpg":
+                case "jpeg":
+                case "png":
+                case "gif":
+                    return "image";
+                case "mp4":
+                case "avi":
+                case "mkv":
+                    return "video";
+                case "mp3":
+                case "wav":
+                case "ogg":
+                    return "music";
+                case "pdf":
+                case "doc":
+                case "docx":
+                case "txt":
+                    return "document";
+                case "apk":
+                    return "application";
+                default:
+                    return "unknown";
+            }
+        }
+
+        return "unknown";
+    }
+    private String getFileExtension(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex != -1 && dotIndex < fileName.length() - 1) {
+            return fileName.substring(dotIndex + 1);
+        }
+        return null;
     }
     private void runtimePermission() {
         Dexter.withContext(getContext()).withPermissions(
@@ -205,14 +290,45 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
         return arrayList;
     }
 
+//    private void displayFiles() {
+//        recyclerView = view.findViewById(R.id.recycler_recent);
+//        recyclerView.setHasFixedSize(true);
+//        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+//
+//        fileList = new ArrayList<>();
+//        fileList.addAll(findFiles(Environment.getExternalStorageDirectory()));
+//
+//        fileList.sort(Comparator.comparingLong(File::lastModified).reversed());
+//        fileList = new ArrayList<>(fileList.subList(0, Math.min(fileList.size(), 20))); // Get only the first 10 files
+//        fileAdapter = new FileAdapter(getContext(), fileList, this);
+//        recyclerView.setAdapter(fileAdapter);
+//    }
+
+
     private void displayFiles() {
+        DatabaseHelper dbHelper = new DatabaseHelper(getContext());
+        List<DatabaseHelper.FileModel> fileModels = dbHelper.getAllFiles();
+
         recyclerView = view.findViewById(R.id.recycler_recent);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
         fileList = new ArrayList<>();
-        fileList.addAll(findFiles(Environment.getExternalStorageDirectory()));
-        fileList.sort(Comparator.comparingLong(File::lastModified).reversed());
-        fileList = new ArrayList<>(fileList.subList(0, Math.min(fileList.size(), 20))); // Get only the first 10 files
+
+        for (DatabaseHelper.FileModel fileModel : fileModels) {
+            File file = new File(fileModel.getPath());
+            fileList.add(file);
+        }
+
+        Collections.sort(fileList, new Comparator<File>() {
+            public int compare(File file1, File file2) {
+                return Long.compare(file2.lastModified(), file1.lastModified());
+            }
+        });
+
+        // Get only the first 20 files
+        fileList = new ArrayList<>(fileList.subList(0, Math.min(fileList.size(), 20)));
+        // Create the adapter and set it to the RecyclerView
         fileAdapter = new FileAdapter(getContext(), fileList, this);
         recyclerView.setAdapter(fileAdapter);
     }

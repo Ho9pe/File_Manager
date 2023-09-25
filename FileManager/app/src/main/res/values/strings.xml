@@ -3,4 +3,7 @@
     
     <string name="Open_Drawer">Open Navigation Drawer</string>
     <string name="Close_Drawer">Close Navigation Drawer</string>
+
+    <string name="file_details">File Name: %s\nSize: %s\nPath: %s\nLast Modified: %s</string>
+
 </resources>
