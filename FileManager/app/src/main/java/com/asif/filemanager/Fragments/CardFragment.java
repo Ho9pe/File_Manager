@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -50,14 +48,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class CardFragment extends Fragment implements OnFileSelectedListener {
 
-    private RecyclerView recyclerView;
     private FileAdapter fileAdapter;
     private List<File> fileList;
-    private ImageView img_back;
-    private TextView tv_pathHolder;
     File storage;
     String data;
     String[] items = {"Details", "Rename", "Copy", "Paste", "Delete", "Share"};
@@ -71,8 +67,8 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_card, container, false);
 
-        tv_pathHolder = view.findViewById(R.id.tv_pathHolder);
-        img_back = view.findViewById(R.id.img_back);
+        TextView tv_pathHolder = view.findViewById(R.id.tv_pathHolder);
+        ImageView img_back = view.findViewById(R.id.img_back);
 
         File[] externalCacheDirs = getContext().getExternalCacheDirs();
         boolean hasExternalStorage = false;
@@ -131,22 +127,19 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("SD Card Unavailable");
         builder.setMessage("This device does not have an SD card or SD card access is not available.");
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                // Handle OK button click
-                dialogInterface.dismiss();
-                // Navigate to HomeFragment
-                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, new HomeFragment())
-                        .commit();
-                // Set "Home" item as selected in the navigation menu
-                NavigationView navigationView = requireActivity().findViewById(R.id.nav_view);
-                Menu menu = navigationView.getMenu();
-                MenuItem homeItem = menu.findItem(R.id.nav_home);
-                homeItem.setChecked(true);
-            }
+        builder.setPositiveButton("OK", (dialogInterface, i) -> {
+            // Handle OK button click
+            dialogInterface.dismiss();
+            // Navigate to HomeFragment
+            FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, new HomeFragment())
+                    .commit();
+            // Set "Home" item as selected in the navigation menu
+            NavigationView navigationView = requireActivity().findViewById(R.id.nav_view);
+            Menu menu = navigationView.getMenu();
+            MenuItem homeItem = menu.findItem(R.id.nav_home);
+            homeItem.setChecked(true);
         });
         builder.show();
     }
@@ -186,7 +179,7 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
         return arrayList;
     }
     private void displayFiles() {
-        recyclerView = view.findViewById(R.id.recycler_internal);
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_internal);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         fileList = new ArrayList<>();
@@ -249,143 +242,130 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
         final Dialog optionDialog = new Dialog(getContext());
         optionDialog.setContentView(R.layout.option_dialog);
         optionDialog.setTitle("Select Options.");
-        ListView options = (ListView) optionDialog.findViewById(R.id.List);
-        CustomAdapter customAdapter = new CustomAdapter();
+        ListView options = optionDialog.findViewById(R.id.List);
+        CustomAdapter customAdapter = new CustomAdapter(items);
         options.setAdapter(customAdapter);
         optionDialog.show();
 
-        options.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedItem = adapterView.getItemAtPosition(i).toString();
+        options.setOnItemClickListener((adapterView, view, i, l) -> {
+            String selectedItem = adapterView.getItemAtPosition(i).toString();
 
-                switch (selectedItem){
-                    case "Details":
-                        AlertDialog.Builder detailDialog = new AlertDialog.Builder(getContext());
-                        detailDialog.setTitle("Details");
-                        final TextView details = new TextView(getContext());
-                        detailDialog.setView(details);
-                        Date lastModified = new Date(file.lastModified());
-                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                        String formattedDate = formatter.format(lastModified);
+            switch (selectedItem){
+                case "Details":
+                    AlertDialog.Builder detailDialog = new AlertDialog.Builder(getContext());
+                    detailDialog.setTitle("Details");
+                    final TextView details = new TextView(getContext());
+                    detailDialog.setView(details);
+                    Date lastModified = new Date(file.lastModified());
+                    SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
+                    String formattedDate = formatter.format(lastModified);
 
-                        details.setText("File Name: " + file.getName()+ "\n" +
-                                "Size: " + Formatter.formatShortFileSize(getContext(), file.length()) + "\n" +
-                                "Path: " + file.getAbsolutePath() + "\n" +
-                                "Last Modified: " + formattedDate);
-                        detailDialog.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
+                    String detailsText = getString(R.string.file_details, file.getName(),
+                            Formatter.formatShortFileSize(getContext(), file.length()),
+                            file.getAbsolutePath(),
+                            formattedDate);
 
-                        AlertDialog alertDialog_details = detailDialog.create();
-                        alertDialog_details.show();
-                        break;
+                    details.setText(detailsText);
+                    detailDialog.setPositiveButton("Ok", (dialogInterface, i1) -> dialogInterface.dismiss());
 
-                    case "Rename":
-                        AlertDialog.Builder renameDialog = new AlertDialog.Builder(getContext());
-                        renameDialog.setTitle("Rename File: ");
-                        final EditText name = new EditText(getContext());
-                        renameDialog.setView(name);
+                    AlertDialog alertDialog_details = detailDialog.create();
+                    alertDialog_details.show();
+                    break;
 
-                        renameDialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                String new_name = name.getEditableText().toString();
-                                String extension = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf("."));
-                                File current = new File(file.getAbsolutePath());
-                                File destination = new File(file.getAbsolutePath().replace(file.getName(), new_name) + extension);
+                case "Rename":
+                    AlertDialog.Builder renameDialog = new AlertDialog.Builder(getContext());
+                    renameDialog.setTitle("Rename File: ");
+                    final EditText name = new EditText(getContext());
+                    renameDialog.setView(name);
 
-                                if(current.renameTo(destination)){
-                                    fileList.set(position, destination);
-                                    fileAdapter.notifyItemChanged(position);
-                                    Toast.makeText(getContext(), "Renamed!", Toast.LENGTH_SHORT).show();
-                                }
-                                else{
-                                    Toast.makeText(getContext(), "Couldn't Rename!", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+                    renameDialog.setPositiveButton("OK", (dialogInterface, i12) -> {
+                        String new_name = name.getEditableText().toString();
+                        String extension = file.getAbsolutePath().substring(file.getAbsolutePath().lastIndexOf("."));
+                        File current = new File(file.getAbsolutePath());
+                        File destination = new File(file.getAbsolutePath().replace(file.getName(), new_name) + extension);
 
-                        renameDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
-                        AlertDialog alertdialog_rename = renameDialog.create();
-                        alertdialog_rename.show();
-                        break;
+                        if(current.renameTo(destination)){
+                            fileList.set(position, destination);
+                            fileAdapter.notifyItemChanged(position);
+                            Toast.makeText(getContext(), "Renamed!", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            Toast.makeText(getContext(), "Couldn't Rename!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
-                    case "Copy":
-                        selectedFile = file;
-                        Toast.makeText(getContext(), "File copied", Toast.LENGTH_SHORT).show();
-                        optionDialog.dismiss();
-                        break;
+                    renameDialog.setNegativeButton("Cancel", (dialogInterface, i13) -> dialogInterface.dismiss());
+                    AlertDialog alertdialog_rename = renameDialog.create();
+                    alertdialog_rename.show();
+                    break;
 
-                    case "Paste":
-                        if (selectedFile != null) {
-                            File destinationDir = new File(file.getAbsolutePath());
-                            if (destinationDir.exists() && destinationDir.isDirectory()) {
-                                File newFile = new File(destinationDir, selectedFile.getName());
-                                if (copyFile(selectedFile, newFile)) {
-                                    fileList.add(newFile);
-                                    fileAdapter.notifyItemInserted(fileList.size() - 1);
-                                    Toast.makeText(getContext(), "File pasted", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    Toast.makeText(getContext(), "Failed to paste file", Toast.LENGTH_SHORT).show();
-                                }
+                case "Copy":
+                    selectedFile = file;
+                    Toast.makeText(getContext(), "File copied", Toast.LENGTH_SHORT).show();
+                    optionDialog.dismiss();
+                    break;
+
+                case "Paste":
+                    if (selectedFile != null) {
+                        File destinationDir = new File(file.getAbsolutePath());
+                        if (destinationDir.exists() && destinationDir.isDirectory()) {
+                            File newFile = new File(destinationDir, selectedFile.getName());
+                            if (copyFile(selectedFile, newFile)) {
+                                fileList.add(newFile);
+                                fileAdapter.notifyItemInserted(fileList.size() - 1);
+                                Toast.makeText(getContext(), "File pasted", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(getContext(), "Invalid destination folder", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Failed to paste file", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(getContext(), "No file to paste", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Invalid destination folder", Toast.LENGTH_SHORT).show();
                         }
-                        optionDialog.dismiss();
-                        break;
+                    } else {
+                        Toast.makeText(getContext(), "No file to paste", Toast.LENGTH_SHORT).show();
+                    }
+                    optionDialog.dismiss();
+                    break;
 
-                    case "Delete":
-                        AlertDialog.Builder deleteDialog = new AlertDialog.Builder(getContext());
-                        deleteDialog.setTitle("DELETE "+ file.getName()+ "?");
-                        deleteDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                file.delete();
-                                fileList.remove(position);
-                                fileAdapter.notifyDataSetChanged();
-                                Toast.makeText(getContext(), "Deleted!", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        deleteDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
+                case "Delete":
+                    AlertDialog.Builder deleteDialog = new AlertDialog.Builder(getContext());
+                    deleteDialog.setTitle("DELETE "+ file.getName()+ "?");
+                    deleteDialog.setPositiveButton("Yes", (dialogInterface, i14) -> {
+                        if (file.delete()) {
+                            fileList.remove(position);
+                            fileAdapter.notifyItemRemoved(position);
+                            Toast.makeText(getContext(), "Deleted!", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Failed to delete the file.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    deleteDialog.setNegativeButton("No", (dialogInterface, i15) -> dialogInterface.dismiss());
 
-                        AlertDialog alertDialog_delete = deleteDialog.create();
-                        alertDialog_delete.show();
-                        break;
+                    AlertDialog alertDialog_delete = deleteDialog.create();
+                    alertDialog_delete.show();
+                    break;
 
-                    case "Share":
-                        String fileName = file.getName();
-                        Uri fileUri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".fileProvider", file);
-                        Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                        shareIntent.setType(getMimeType(fileUri));
-                        shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
-                        shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        startActivity(Intent.createChooser(shareIntent, "Share " + fileName));
-                        break;
-                }
-                optionDialog.dismiss();
+                case "Share":
+                    String fileName = file.getName();
+                    Uri fileUri = FileProvider.getUriForFile(getContext(), getContext().getPackageName() + ".fileProvider", file);
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.setType(getMimeType(fileUri));
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
+                    shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    startActivity(Intent.createChooser(shareIntent, "Share " + fileName));
+                    break;
             }
+            optionDialog.dismiss();
         });
 
     }
 
-    class CustomAdapter extends BaseAdapter{
+    static class CustomAdapter extends BaseAdapter{
+
+        private final String[] items;
+
+        public CustomAdapter(String[] items) {
+            this.items = items;
+        }
 
         @Override
         public int getCount() {
@@ -404,29 +384,35 @@ public class CardFragment extends Fragment implements OnFileSelectedListener {
 
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
-            View myView = getLayoutInflater().inflate(R.layout.option_layout, null);
-            TextView txtOptions = myView.findViewById(R.id.txtOption);
-            ImageView imgOptions = myView.findViewById(R.id.imgOption);
+            if (view == null) {
+                view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.option_layout, viewGroup, false);
+            }
+            TextView txtOptions = view.findViewById(R.id.txtOption);
+            ImageView imgOptions = view.findViewById(R.id.imgOption);
+
             txtOptions.setText(items[i]);
-            if(items[i].equals("Details")){
-                imgOptions.setImageResource(R.drawable.ic_details);
+
+            switch (items[i]) {
+                case "Details":
+                    imgOptions.setImageResource(R.drawable.ic_details);
+                    break;
+                case "Rename":
+                    imgOptions.setImageResource(R.drawable.ic_rename);
+                    break;
+                case "Copy":
+                    imgOptions.setImageResource(R.drawable.ic_copy);
+                    break;
+                case "Paste":
+                    imgOptions.setImageResource(R.drawable.ic_paste);
+                    break;
+                case "Delete":
+                    imgOptions.setImageResource(R.drawable.ic_delete);
+                    break;
+                case "Share":
+                    imgOptions.setImageResource(R.drawable.ic_share);
+                    break;
             }
-            else if(items[i].equals("Rename")){
-                imgOptions.setImageResource(R.drawable.ic_rename);
-            }
-            else if(items[i].equals("Copy")){
-                imgOptions.setImageResource(R.drawable.ic_copy);
-            }
-            else if(items[i].equals("Paste")){
-                imgOptions.setImageResource(R.drawable.ic_paste);
-            }
-            else if(items[i].equals("Delete")){
-                imgOptions.setImageResource(R.drawable.ic_delete);
-            }
-            else if(items[i].equals("Share")){
-                imgOptions.setImageResource(R.drawable.ic_share);
-            }
-            return myView;
+            return view;
         }
     }
 
