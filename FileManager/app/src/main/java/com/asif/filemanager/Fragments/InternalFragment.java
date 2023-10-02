@@ -3,6 +3,7 @@ package com.asif.filemanager.Fragments;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -198,6 +199,7 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
         }
         return arrayList;
     }
+    String fileType;
     private void displayFiles() {
         RecyclerView recyclerView = view.findViewById(R.id.recycler_internal);
         recyclerView.setHasFixedSize(true);
@@ -297,12 +299,22 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                         File current = new File(file.getAbsolutePath());
                         File destination = new File(file.getAbsolutePath().replace(file.getName(), new_name) + extension);
 
-                        if(current.renameTo(destination)){
+                        if (current.renameTo(destination)) {
+                            // Rename the file in the database
+                            String newName = destination.getName(); // Get the new name with extension
+                            String newPath = destination.getAbsolutePath();
+                            String newType = getFileType(newName);
+                            long newSize = destination.length();
+                            long newLastModified = destination.lastModified();
+
+                            // Update the database entry with the new information
+                            DatabaseHelper dbHelper = new DatabaseHelper(getContext());
+                            dbHelper.updateFile(newName, newPath, newType, newSize, newLastModified);
+
                             fileList.set(position, destination);
                             fileAdapter.notifyItemChanged(position);
                             Toast.makeText(getContext(), "Renamed!", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
+                        } else {
                             Toast.makeText(getContext(), "Couldn't Rename!", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -324,8 +336,12 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                         if (destinationDir.exists() && destinationDir.isDirectory()) {
                             File newFile = new File(destinationDir, selectedFile.getName());
                             if (copyFile(selectedFile, newFile)) {
-                                fileList.add(newFile);
-                                fileAdapter.notifyItemInserted(fileList.size() - 1);
+                                // Update the database with the new file information
+                                DatabaseHelper dbHelper = new DatabaseHelper(getContext());
+                                dbHelper.insertFile(newFile.getName(), newFile.getAbsolutePath(), getFileType(newFile.getName()), newFile.length(), newFile.lastModified());
+
+                                //fileList.add(newFile);
+                                fileAdapter.notifyItemInserted(fileList.size() + 1);
                                 Toast.makeText(getContext(), "File pasted", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(getContext(), "Failed to paste file", Toast.LENGTH_SHORT).show();
@@ -339,11 +355,16 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                     optionDialog.dismiss();
                     break;
 
+
                 case "Delete":
                     AlertDialog.Builder deleteDialog = new AlertDialog.Builder(getContext());
-                    deleteDialog.setTitle("DELETE "+ file.getName()+ "?");
+                    deleteDialog.setTitle("DELETE " + file.getName() + "?");
                     deleteDialog.setPositiveButton("Yes", (dialogInterface, i14) -> {
                         if (file.delete()) {
+                            // If the file is successfully deleted from storage, also remove it from the database
+                            DatabaseHelper dbHelper = new DatabaseHelper(getContext());
+                            dbHelper.deleteFile(file.getAbsolutePath());
+
                             fileList.remove(position);
                             fileAdapter.notifyItemRemoved(position);
                             Toast.makeText(getContext(), "Deleted!", Toast.LENGTH_SHORT).show();
@@ -357,6 +378,7 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                     alertDialog_delete.show();
                     break;
 
+
                 case "Share":
                     String fileName = file.getName();
                     Uri fileUri = FileProvider.getUriForFile(getContext(), "com.asif.fileManager.fileProvider", file);
@@ -364,7 +386,12 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                     shareIntent.setType(getMimeType(fileUri));
                     shareIntent.putExtra(Intent.EXTRA_STREAM, fileUri);
                     shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    startActivity(Intent.createChooser(shareIntent, "Share " + fileName));
+
+                    try {
+                        startActivity(Intent.createChooser(shareIntent, "Share " + fileName));
+                    } catch (ActivityNotFoundException e) {
+                        Toast.makeText(getContext(), "No app found to handle the file.", Toast.LENGTH_SHORT).show();
+                    }
                     break;
             }
             optionDialog.dismiss();

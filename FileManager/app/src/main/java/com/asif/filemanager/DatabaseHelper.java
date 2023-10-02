@@ -1,15 +1,16 @@
 package com.asif.filemanager;
-
-import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
+    private final Context context;
     private static final String DATABASE_NAME = "file_manager.db";
     private static final int DATABASE_VERSION = 1;
     private static final String TABLE_FILES = "files";
@@ -22,6 +23,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this.context = context;
     }
 
     @Override
@@ -56,6 +58,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void updateFile(String name, String path, String type, long size, long lastModified) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_NAME, name);
+        values.put(COLUMN_PATH, path);
+        values.put(COLUMN_TYPE, type);
+        values.put(COLUMN_SIZE, size);
+        values.put(COLUMN_LAST_MODIFIED, lastModified);
+
+        // You should use the file's path or some other identifier to update the correct record
+        int rowsAffected = db.update(TABLE_FILES, values, COLUMN_PATH + " = ?", new String[]{path});
+        db.close();
+
+        if (rowsAffected == 0) {
+            // Handle the case where the file doesn't exist in the database and needs to be inserted
+            insertFile(name, path, type, size, lastModified);
+        }
+    }
+
+    public void deleteFile(String path) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsDeleted = db.delete(TABLE_FILES, COLUMN_PATH + " = ?", new String[]{path});
+        db.close();
+
+        if (rowsDeleted == 0) {
+            Toast.makeText(context, "File not found in the database.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public ArrayList<FileModel> getAllFiles() {
         ArrayList<FileModel> fileList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -69,38 +100,50 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = db.query(
                 TABLE_FILES,
                 projection,
-                null, // selection
-                null, // selectionArgs
-                null, // groupBy
-                null, // having
-                null  // orderBy
+                null,
+                null,
+                null,
+                null,
+                null
         );
 
         if (cursor != null && cursor.moveToFirst()) {
-            do {
-                @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
-                @SuppressLint("Range") String path = cursor.getString(cursor.getColumnIndex(COLUMN_PATH));
-                @SuppressLint("Range") String type = cursor.getString(cursor.getColumnIndex(COLUMN_TYPE));
-                @SuppressLint("Range") long size = cursor.getLong(cursor.getColumnIndex(COLUMN_SIZE));
-                @SuppressLint("Range") long lastModified = cursor.getLong(cursor.getColumnIndex(COLUMN_LAST_MODIFIED));
+            int nameColumnIndex = cursor.getColumnIndex(COLUMN_NAME);
+            int pathColumnIndex = cursor.getColumnIndex(COLUMN_PATH);
+            int typeColumnIndex = cursor.getColumnIndex(COLUMN_TYPE);
+            int sizeColumnIndex = cursor.getColumnIndex(COLUMN_SIZE);
+            int lastModifiedColumnIndex = cursor.getColumnIndex(COLUMN_LAST_MODIFIED);
 
-                FileModel fileModel = new FileModel(name, path, type, size, lastModified);
-                fileList.add(fileModel);
+            do {
+                if (nameColumnIndex != -1 && pathColumnIndex != -1 && typeColumnIndex != -1 &&
+                        sizeColumnIndex != -1 && lastModifiedColumnIndex != -1) {
+
+                    String name = cursor.getString(nameColumnIndex);
+                    String path = cursor.getString(pathColumnIndex);
+                    String type = cursor.getString(typeColumnIndex);
+                    long size = cursor.getLong(sizeColumnIndex);
+                    long lastModified = cursor.getLong(lastModifiedColumnIndex);
+
+                    FileModel fileModel = new FileModel(name, path, type, size, lastModified);
+                    fileList.add(fileModel);
+                } else {
+                    Log.e("CursorError", "One or more columns are missing in the cursor.");
+                }
             } while (cursor.moveToNext());
 
             cursor.close();
         }
 
+
         return fileList;
     }
+
     public static class FileModel {
         private final String name;
         private final String path;
         private final String type;
         private final long size;
         private final long lastModified;
-
-        // Constructor, getters, setters, etc.
         public  FileModel(String name, String path, String type, long size, long lastModified) {
             this.name = name;
             this.path = path;
@@ -131,36 +174,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-//    @SuppressLint("Range")
-//    public long getLastInsertedFileDate() {
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        String query = "SELECT " + COLUMN_LAST_MODIFIED + " FROM " + TABLE_FILES +
-//                " ORDER BY " + COLUMN_LAST_MODIFIED + " DESC LIMIT 1";
-//        Cursor cursor = db.rawQuery(query, null);
-//
-//        long lastModifiedDate = 0;
-//
-//        if (cursor != null && cursor.moveToFirst()) {
-//            lastModifiedDate = cursor.getLong(cursor.getColumnIndex(COLUMN_LAST_MODIFIED));
-//            cursor.close();
-//        }
-//
-//        return lastModifiedDate;
-//    }
-
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
     }
 }
 

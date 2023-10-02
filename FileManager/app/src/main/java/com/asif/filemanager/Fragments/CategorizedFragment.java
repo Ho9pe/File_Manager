@@ -297,6 +297,7 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
         if (!fileType.equals("downloads")) {
             fileList = new ArrayList<>(fileList.subList(0, Math.min(fileList.size(), 20)));
         }
+
         fileAdapter = new FileAdapter(getContext(), fileList, this);
         recyclerView.setAdapter(fileAdapter);
     }
