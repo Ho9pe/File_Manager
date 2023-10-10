@@ -1,45 +1,40 @@
 package com.asif.filemanager.Fragments;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.database.DataSetObserver;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.asif.filemanager.DatabaseHelper;
 import com.asif.filemanager.FileAdapter;
 import com.asif.filemanager.FileOpener;
-import com.asif.filemanager.MainActivity;
 import com.asif.filemanager.OnFileSelectedListener;
 import com.asif.filemanager.R;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.google.android.material.navigation.NavigationView;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,169 +42,70 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class InternalFragment extends Fragment implements OnFileSelectedListener {
+public class FavouriteFragment extends Fragment implements OnFileSelectedListener{
+
+    private RecyclerView recyclerView;
+    private FileAdapter adapter;
+    private List<File> fileList;
 
     private FileAdapter fileAdapter;
-    private List<File> fileList;
     File storage;
     String data;
-    String[] items = {"Details", "Rename", "Copy", "Paste", "Delete", "Add Favourites", "Share"};
+    String[] items = {"Details", "Rename", "Remove", "Share"};
 
     private File selectedFile;
 
     View view;
 
-    @Nullable
+    public FavouriteFragment() {
+        // Required empty public constructor
+    }
+
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_internal, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_favorites, container, false);
+        recyclerView = view.findViewById(R.id.recyclerView);
 
-        TextView tv_pathHolder = view.findViewById(R.id.tv_pathHolder);
-        view.findViewById(R.id.img_back);
+        File favouritesDir = new File("/sdcard/FileManagerFavourites");
+        if (favouritesDir.exists() && favouritesDir.isDirectory()) {
+            File[] files = favouritesDir.listFiles();
 
-        String internalStorage = System.getenv("EXTERNAL_STORAGE");
-        storage = new File(internalStorage);
+            if (files != null && files.length > 0) {
+                fileList = new ArrayList<>();
+                Collections.addAll(fileList, files);
 
-        try {
-            data = getArguments().getString("path");
-            storage = new File(data);
-        }catch (Exception e){
-            e.printStackTrace();
+                adapter = new FileAdapter(getContext(), fileList, this);
+                recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+                recyclerView.setAdapter(adapter);
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Error");
+                builder.setMessage("No Files Added to Favourites");
+                builder.setPositiveButton("OK", (dialogInterface, i) -> {
+                    // Handle OK button click
+                    dialogInterface.dismiss();
+                    // Navigate to HomeFragment
+                    FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, new HomeFragment())
+                            .commit();
+                    // Set "Home" item as selected in the navigation menu
+                    NavigationView navigationView = requireActivity().findViewById(R.id.nav_view);
+                    Menu menu = navigationView.getMenu();
+                    MenuItem homeItem = menu.findItem(R.id.nav_home);
+                    homeItem.setChecked(true);
+                });
+                builder.show();
+            }
         }
-
-        tv_pathHolder.setText(storage.getAbsolutePath());
-        runtimePermission();
-
-        insertFilesIntoDatabase();
-
         return view;
     }
 
-    private void runtimePermission() {
-        Dexter.withContext(getContext()).withPermissions(
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-        ).withListener(new MultiplePermissionsListener() {
-            @Override
-            public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
-                displayFiles();
-            }
-
-            @Override
-            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
-                permissionToken.continuePermissionRequest();
-            }
-        }).check();
-    }
-
-    // Insert file information into the database when the Home page is accessed
-    private void insertFilesIntoDatabase() {
-        if (isStoragePermissionGranted()) {
-            DatabaseHelper dbHelper = new DatabaseHelper(getContext());
-            if (dbHelper.isEmpty()) {
-                ArrayList<File> files = findFiles(Environment.getExternalStorageDirectory());
-                for (File file : files) {
-                    String name = file.getName();
-                    String path = file.getAbsolutePath();
-                    String type = getFileType(name);
-                    long size = file.length();
-                    long lastModified = file.lastModified();
-
-                    dbHelper.insertFile(name, path, type, size, lastModified);
-                }
-            }
-        }
-    }
-    private boolean isStoragePermissionGranted() {
-        return ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-    }
-    private String getFileType(String fileName) {
-        String fileExtension = getFileExtension(fileName);
-        if (fileExtension != null) {
-            switch (fileExtension.toLowerCase()) {
-                case "jpg":
-                case "jpeg":
-                case "png":
-                case "heic":
-                    return "image";
-                case "mp4":
-                case "mkv":
-                    return "video";
-                case "mp3":
-                    return "music";
-                case "pdf":
-                case "doc":
-                case "docx":
-                case "txt":
-                    return "docs/pdf";
-                case "apk":
-                    return "apk";
-                default:
-                    return "unknown";
-            }
-        }
-
-        return "unknown";
-    }
-    private String getFileExtension(String fileName) {
-        int dotIndex = fileName.lastIndexOf('.');
-        if (dotIndex != -1 && dotIndex < fileName.length() - 1) {
-            return fileName.substring(dotIndex + 1);
-        }
-        return null;
-    }
-
-    public ArrayList<File> findFiles(@NonNull File file)
-    {
-        ArrayList<File> arrayList = new ArrayList<>();
-        File[] files = file.listFiles();
-
-        if (files != null) {
-            for (File singleFile : files) {
-                if (singleFile.isDirectory() && !singleFile.isHidden()) {
-                    arrayList.add(singleFile);
-                }
-            }
-            for (File singleFile : files) {
-                if (singleFile.getName().toLowerCase().endsWith(".jpeg") ||
-                        singleFile.getName().toLowerCase().endsWith(".jpg") ||
-                        singleFile.getName().toLowerCase().endsWith(".png") ||
-                        singleFile.getName().toLowerCase().endsWith(".heic") ||
-
-                        singleFile.getName().toLowerCase().endsWith(".mp3") ||
-                        singleFile.getName().toLowerCase().endsWith(".mp4") ||
-                        singleFile.getName().toLowerCase().endsWith(".mkv") ||
-
-                        singleFile.getName().toLowerCase().endsWith(".pdf") ||
-                        singleFile.getName().toLowerCase().endsWith(".epub") ||
-                        singleFile.getName().toLowerCase().endsWith(".doc") ||
-                        singleFile.getName().toLowerCase().endsWith(".docx") ||
-                        singleFile.getName().toLowerCase().endsWith(".txt") ||
-                        singleFile.getName().toLowerCase().endsWith(".apk") ||
-
-                        singleFile.getName().toLowerCase().endsWith(".7z") ||
-                        singleFile.getName().toLowerCase().endsWith(".rar") ||
-                        singleFile.getName().toLowerCase().endsWith(".zip")) {
-                    arrayList.add(singleFile);
-                }
-            }
-        }
-        return arrayList;
-    }
-    String fileType;
-    private void displayFiles() {
-        RecyclerView recyclerView = view.findViewById(R.id.recycler_internal);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        fileList = new ArrayList<>();
-        fileList.addAll(findFiles(storage));
-        fileAdapter = new FileAdapter(getContext(), fileList, this);
-        recyclerView.setAdapter(fileAdapter);
-    }
 
     @Override
     public void onFileClicked(File file) {
@@ -230,7 +126,6 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
         }
 
     }
-
     private String getMimeType(Uri uri) {
         ContentResolver resolver = getContext().getContentResolver();
         return resolver.getType(uri);
@@ -289,8 +184,42 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
         }
     }
 
+    private String getFileType(String fileName) {
+        String fileExtension = getFileExtension(fileName);
+        if (fileExtension != null) {
+            switch (fileExtension.toLowerCase()) {
+                case "jpg":
+                case "jpeg":
+                case "png":
+                case "heic":
+                    return "image";
+                case "mp4":
+                case "mkv":
+                    return "video";
+                case "mp3":
+                    return "music";
+                case "pdf":
+                case "doc":
+                case "docx":
+                case "txt":
+                    return "docs/pdf";
+                case "apk":
+                    return "apk";
+                default:
+                    return "unknown";
+            }
+        }
 
-    @Override
+        return "unknown";
+    }
+    private String getFileExtension(String fileName) {
+        int dotIndex = fileName.lastIndexOf('.');
+        if (dotIndex != -1 && dotIndex < fileName.length() - 1) {
+            return fileName.substring(dotIndex + 1);
+        }
+        return null;
+    }
+
     public void onFileLongClicked(File file, int position) {
         final Dialog optionDialog = new Dialog(getContext());
         optionDialog.setContentView(R.layout.option_dialog);
@@ -361,52 +290,15 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                     alertdialog_rename.show();
                     break;
 
-                case "Copy":
-                    selectedFile = file;
-                    Toast.makeText(getContext(), "File copied", Toast.LENGTH_SHORT).show();
-                    optionDialog.dismiss();
-                    break;
-
-                case "Paste":
-                    if (selectedFile != null) {
-                        File destinationDir = new File(file.getAbsolutePath());
-                        if (destinationDir.exists() && destinationDir.isDirectory()) {
-                            File newFile = new File(destinationDir, selectedFile.getName());
-                            if (copyFile(selectedFile, newFile)) {
-                                // Update the database with the new file information
-                                DatabaseHelper dbHelper = new DatabaseHelper(getContext());
-                                dbHelper.insertFile(newFile.getName(), newFile.getAbsolutePath(), getFileType(newFile.getName()), newFile.length(), newFile.lastModified());
-
-                                //fileList.add(newFile);
-                                fileAdapter.notifyItemInserted(fileList.size() + 1);
-                                Toast.makeText(getContext(), "File pasted", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(getContext(), "Failed to paste file", Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            Toast.makeText(getContext(), "Invalid destination folder", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(getContext(), "No file to paste", Toast.LENGTH_SHORT).show();
-                    }
-                    optionDialog.dismiss();
-                    break;
-
-
-                case "Delete":
+                case "Remove":
                     AlertDialog.Builder deleteDialog = new AlertDialog.Builder(getContext());
-                    deleteDialog.setTitle("DELETE " + file.getName() + "?");
+                    deleteDialog.setTitle("REMOVE " + file.getName() + "?");
                     deleteDialog.setPositiveButton("Yes", (dialogInterface, i14) -> {
                         if (file.delete()) {
-                            // If the file is successfully deleted from storage, also remove it from the database
-                            DatabaseHelper dbHelper = new DatabaseHelper(getContext());
-                            dbHelper.deleteFile(file.getAbsolutePath());
-
                             fileList.remove(position);
-                            fileAdapter.notifyItemRemoved(position);
-                            Toast.makeText(getContext(), "Deleted!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Removed!", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(getContext(), "Failed to delete the file.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Failed to remove the file.", Toast.LENGTH_SHORT).show();
                         }
                     });
                     deleteDialog.setNegativeButton("No", (dialogInterface, i15) -> dialogInterface.dismiss());
@@ -414,12 +306,6 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                     AlertDialog alertDialog_delete = deleteDialog.create();
                     alertDialog_delete.show();
                     break;
-
-                case "Add Favourites":
-                    selectedFile = file;
-                    copyFileToFavoriteDirectory(selectedFile);
-                    break;
-
 
                 case "Share":
                     String fileName = file.getName();
@@ -441,7 +327,7 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
 
     }
 
-    class CustomAdapter extends BaseAdapter{
+    class CustomAdapter extends BaseAdapter {
 
         @Override
         public int getCount() {
@@ -475,17 +361,8 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
                 case "Rename":
                     imgOptions.setImageResource(R.drawable.ic_rename);
                     break;
-                case "Copy":
-                    imgOptions.setImageResource(R.drawable.ic_copy);
-                    break;
-                case "Paste":
-                    imgOptions.setImageResource(R.drawable.ic_paste);
-                    break;
-                case "Delete":
-                    imgOptions.setImageResource(R.drawable.ic_delete);
-                    break;
-                case "Add Favourites":
-                    imgOptions.setImageResource(R.drawable.favourites);
+                case "Remove":
+                    imgOptions.setImageResource(R.drawable.remove_favourites);
                     break;
                 case "Share":
                     imgOptions.setImageResource(R.drawable.ic_share);
@@ -494,6 +371,4 @@ public class InternalFragment extends Fragment implements OnFileSelectedListener
             return view;
         }
     }
-
 }
-

@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
@@ -54,10 +58,11 @@ import java.util.Locale;
 
 public class HomeFragment extends Fragment implements OnFileSelectedListener {
 
+    private SearchView searchView;
     private FileAdapter fileAdapter;
     private List<File> fileList;
 
-    String[] items = {"Details", "Rename", "Copy", "Paste", "Delete", "Share"};
+    String[] items = {"Details", "Rename", "Copy", "Paste", "Delete", "Add Favourites", "Share"};
 
     private File selectedFile;
     View view;
@@ -66,6 +71,23 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        searchView = view.findViewById(R.id.searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener(){
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // Handle search query submission
+                performSearch(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                // Handle query text change (live search)
+                performSearch(newText);
+                return true;
+            }
+        });
 
         LinearLayout linearImages = view.findViewById(R.id.linearImages);
         LinearLayout linearVideos = view.findViewById(R.id.linearVideos);
@@ -134,6 +156,28 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
         insertFilesIntoDatabase();
 
         return view;
+    }
+    private void performSearch(String query) {
+        RecyclerView recyclerView;
+        recyclerView = view.findViewById(R.id.recycler_recent);
+        // Assuming fileList is the list of items you want to search within
+        ArrayList<File> filteredList = new ArrayList<>();
+
+        // Loop through your fileList and check if each item matches the search query
+        for (File file : fileList) {
+            if (file.getName().toLowerCase().contains(query.toLowerCase())) {
+                filteredList.add(file);
+            }
+        }
+
+        // Create a new adapter with the filtered data
+        FileAdapter filteredAdapter = new FileAdapter(getContext(), filteredList, this);
+
+        // Set the adapter to your RecyclerView
+        recyclerView.setAdapter(filteredAdapter);
+
+        // Notify the adapter that the data has changed
+        filteredAdapter.notifyDataSetChanged();
     }
 
     // Insert file information into the database when the Home page is accessed
@@ -270,7 +314,7 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
         Collections.sort(fileList, (file1, file2) -> Long.compare(file2.lastModified(), file1.lastModified()));
 
         // Get only the first 20 files
-        fileList = new ArrayList<>(fileList.subList(0, Math.min(fileList.size(), 20)));
+        fileList = new ArrayList<>(fileList.subList(0, Math.min(fileList.size(), 50)));
         // Create the adapter and set it to the RecyclerView
         fileAdapter = new FileAdapter(getContext(), fileList, this);
         recyclerView.setAdapter(fileAdapter);
@@ -317,6 +361,41 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
         } catch (IOException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+
+    private void copyFileToFavoriteDirectory(@NonNull File sourceFile) {
+        if (sourceFile == null) {
+            Toast.makeText(getContext(), "File is null. Cannot add to favorites.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        File destinationDirectory = new File("/sdcard/FileManagerFavourites");
+
+        if (!destinationDirectory.exists()) {
+            destinationDirectory.mkdirs();
+        }
+
+        File destinationFile = new File(destinationDirectory, sourceFile.getName());
+
+        try {
+            FileInputStream inputStream = new FileInputStream(sourceFile);
+            FileOutputStream outputStream = new FileOutputStream(destinationFile);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+            inputStream.close();
+            outputStream.close();
+
+            fileList.add(destinationFile);
+
+            Toast.makeText(getContext(), "File added to favorites", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Failed to copy file to favorites", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -427,6 +506,11 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
                     alertDialog_delete.show();
                     break;
 
+                case "Add Favourites":
+                    selectedFile = file;
+                    copyFileToFavoriteDirectory(selectedFile);
+                    break;
+
                 case "Share":
                     String fileName = file.getName();
                     Uri fileUri = FileProvider.getUriForFile(getContext(), "com.asif.fileManager.fileProvider", file);
@@ -484,6 +568,9 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
                     break;
                 case "Delete":
                     imgOptions.setImageResource(R.drawable.ic_delete);
+                    break;
+                case "Add Favourites":
+                    imgOptions.setImageResource(R.drawable.favourites);
                     break;
                 case "Share":
                     imgOptions.setImageResource(R.drawable.ic_share);

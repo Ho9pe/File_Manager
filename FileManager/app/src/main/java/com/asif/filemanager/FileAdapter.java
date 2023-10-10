@@ -10,17 +10,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
     private final Context context;
-    private final List<File> file;
+    private final List<File> fileList;
+    private List<File> filteredList;
     private final OnFileSelectedListener listener;
 
 
-    public FileAdapter(Context context, List<File> file,OnFileSelectedListener listener) {
+    public FileAdapter(Context context, List<File> fileList, OnFileSelectedListener listener) {
         this.context = context;
-        this.file = file;
+        this.fileList = fileList;
+        this.filteredList = fileList;
         this.listener = listener;
     }
 
@@ -33,11 +36,11 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull FileViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
-        holder.tvName.setText(file.get(position).getName());
+        holder.tvName.setText(fileList.get(position).getName());
         holder.tvName.setSelected(true);
 
-        if (file.get(position).isDirectory()) {
-            File[] files = file.get(position).listFiles();
+        if (fileList.get(position).isDirectory()) {
+            File[] files = fileList.get(position).listFiles();
 
             if (files != null) {
                 int items = 0;
@@ -51,66 +54,66 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
                 holder.tvSize.setText("0 Files");
             }
         } else {
-            holder.tvSize.setText(Formatter.formatShortFileSize(context, file.get(position).length()));
+            holder.tvSize.setText(Formatter.formatShortFileSize(context, fileList.get(position).length()));
         }
 //jpeg jpg png heic
-        if(file.get(position).getName().toLowerCase().endsWith(".jpeg")){
+        if(fileList.get(position).getName().toLowerCase().endsWith(".jpeg")){
             holder.imgFile.setImageResource(R.drawable.ic_image);
         }
-        else if(file.get(position).getName().toLowerCase().endsWith(".jpg")){
+        else if(fileList.get(position).getName().toLowerCase().endsWith(".jpg")){
             holder.imgFile.setImageResource(R.drawable.ic_image);
         }
-        else if(file.get(position).getName().toLowerCase().endsWith(".png")){
+        else if(fileList.get(position).getName().toLowerCase().endsWith(".png")){
             holder.imgFile.setImageResource(R.drawable.ic_image);
         }
-        else if(file.get(position).getName().toLowerCase().endsWith(".heic")){
+        else if(fileList.get(position).getName().toLowerCase().endsWith(".heic")){
             holder.imgFile.setImageResource(R.drawable.ic_image);
         }
 //pdf doc docx txt epub apk
-        else if(file.get(position).getName().toLowerCase().endsWith(".doc")){
+        else if(fileList.get(position).getName().toLowerCase().endsWith(".doc")){
             holder.imgFile.setImageResource(R.drawable.ic_docs);
         }
-        else if(file.get(position).getName().toLowerCase().endsWith(".docx")){
+        else if(fileList.get(position).getName().toLowerCase().endsWith(".docx")){
             holder.imgFile.setImageResource(R.drawable.ic_docs);
         }
-        else if(file.get(position).getName().toLowerCase().endsWith(".txt")){
+        else if(fileList.get(position).getName().toLowerCase().endsWith(".txt")){
             holder.imgFile.setImageResource(R.drawable.ic_docs);
         }
-        else if(file.get(position).getName().toLowerCase().endsWith(".pdf")){
+        else if(fileList.get(position).getName().toLowerCase().endsWith(".pdf")){
             holder.imgFile.setImageResource(R.drawable.ic_pdf);
         }
-        else if(file.get(position).getName().toLowerCase().endsWith(".epub")){
+        else if(fileList.get(position).getName().toLowerCase().endsWith(".epub")){
             holder.imgFile.setImageResource(R.drawable.ic_epub);
         }
-        else if(file.get(position).getName().toLowerCase().endsWith(".apk")){
+        else if(fileList.get(position).getName().toLowerCase().endsWith(".apk")){
             holder.imgFile.setImageResource(R.drawable.ic_android);
         }
 //mp3 mp4 mkv
-        else if(file.get(position).getName().toLowerCase().endsWith(".mp3")){
+        else if(fileList.get(position).getName().toLowerCase().endsWith(".mp3")){
             holder.imgFile.setImageResource(R.drawable.ic_music);
         }
-        else if(file.get(position).getName().toLowerCase().endsWith(".mp4")){
+        else if(fileList.get(position).getName().toLowerCase().endsWith(".mp4")){
             holder.imgFile.setImageResource(R.drawable.ic_player);
         }
-        else if(file.get(position).getName().toLowerCase().endsWith(".mkv")){
+        else if(fileList.get(position).getName().toLowerCase().endsWith(".mkv")){
             holder.imgFile.setImageResource(R.drawable.ic_player);
         }
 //7z rar zip
-        else if(file.get(position).getName().toLowerCase().endsWith(".7z")){
+        else if(fileList.get(position).getName().toLowerCase().endsWith(".7z")){
             holder.imgFile.setImageResource(R.drawable.ic_7z);
         }
-        else if(file.get(position).getName().toLowerCase().endsWith(".rar")){
+        else if(fileList.get(position).getName().toLowerCase().endsWith(".rar")){
             holder.imgFile.setImageResource(R.drawable.ic_rar);
         }
-        else if(file.get(position).getName().toLowerCase().endsWith(".zip")){
+        else if(fileList.get(position).getName().toLowerCase().endsWith(".zip")){
             holder.imgFile.setImageResource(R.drawable.ic_zip);
         }
         else{
             holder.imgFile.setImageResource(R.drawable.ic_folder);
         }
-        holder.container.setOnClickListener(view -> listener.onFileClicked(file.get(holder.getAdapterPosition())));
+        holder.container.setOnClickListener(view -> listener.onFileClicked(fileList.get(holder.getAdapterPosition())));
         holder.container.setOnLongClickListener(view -> {
-            listener.onFileLongClicked(file.get(holder.getAdapterPosition()), position);
+            listener.onFileLongClicked(fileList.get(holder.getAdapterPosition()), position);
             return true;
         });
 
@@ -118,6 +121,12 @@ public class FileAdapter extends RecyclerView.Adapter<FileViewHolder> {
 
     @Override
     public int getItemCount() {
-        return file.size();
+        return fileList.size();
+    }
+
+    public void updateData(List<File> updatedList) {
+        this.fileList.clear();
+        this.fileList.addAll(updatedList);
+        notifyDataSetChanged();
     }
 }

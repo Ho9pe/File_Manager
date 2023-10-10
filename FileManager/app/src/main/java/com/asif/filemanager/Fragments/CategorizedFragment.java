@@ -55,7 +55,7 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
 
     private FileAdapter fileAdapter;
     private List<File> fileList;
-    String[] items = {"Details", "Rename", "Copy", "Paste", "Delete", "Share"};
+    String[] items = {"Details", "Rename", "Copy", "Paste", "Delete", "Add Favourites", "Share"};
 
     private File selectedFile;
     File path;
@@ -345,6 +345,41 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
             return false;
         }
     }
+
+    private void copyFileToFavoriteDirectory(@NonNull File sourceFile) {
+        if (sourceFile == null) {
+            Toast.makeText(getContext(), "File is null. Cannot add to favorites.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        File destinationDirectory = new File("/sdcard/FileManagerFavourites");
+
+        if (!destinationDirectory.exists()) {
+            destinationDirectory.mkdirs();
+        }
+
+        File destinationFile = new File(destinationDirectory, sourceFile.getName());
+
+        try {
+            FileInputStream inputStream = new FileInputStream(sourceFile);
+            FileOutputStream outputStream = new FileOutputStream(destinationFile);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+            inputStream.close();
+            outputStream.close();
+
+            fileList.add(destinationFile);
+
+            Toast.makeText(getContext(), "File added to favorites", Toast.LENGTH_SHORT).show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(getContext(), "Failed to copy file to favorites", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     public void onFileLongClicked(File file, int position) {
         final Dialog optionDialog = new Dialog(getContext());
@@ -451,6 +486,11 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
                     alertDialog_delete.show();
                     break;
 
+                case "Add Favourites":
+                    selectedFile = file;
+                    copyFileToFavoriteDirectory(selectedFile);
+                    break;
+
                 case "Share":
                     String fileName = file.getName();
                     Uri fileUri = FileProvider.getUriForFile(getContext(), "com.asif.fileManager.fileProvider", file);
@@ -513,6 +553,9 @@ public class CategorizedFragment extends Fragment implements OnFileSelectedListe
                     break;
                 case "Delete":
                     imgOptions.setImageResource(R.drawable.ic_delete);
+                    break;
+                case "Add Favourites":
+                    imgOptions.setImageResource(R.drawable.favourites);
                     break;
                 case "Share":
                     imgOptions.setImageResource(R.drawable.ic_share);

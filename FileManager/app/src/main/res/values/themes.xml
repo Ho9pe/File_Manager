@@ -6,4 +6,15 @@
     </style>
 
     <style name="Theme.FileManager" parent="Base.Theme.FileManager" />
+    <!-- Custom Toolbar Theme -->
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <!-- Customize toolbar attributes here -->
+        <item name="android:background">@color/black2</item>
+        <item name="titleTextAppearance">@style/ToolbarTitleText</item>
+    </style>
+
+    <!-- Toolbar Title Text Style -->
+    <style name="ToolbarTitleText">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
 </resources>

@@ -17,6 +17,10 @@
             android:icon="@drawable/sd_card">
 
         </item>
+        <item android:id="@+id/nav_favorites"
+            android:title="Favorites"
+            android:icon="@drawable/favourites">
+        </item>
     </group>
 
     <item android:title="More">

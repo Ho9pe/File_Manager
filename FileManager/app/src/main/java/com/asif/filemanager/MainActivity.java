@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.asif.filemanager.Fragments.CardFragment;
 import com.asif.filemanager.Fragments.HomeFragment;
 import com.asif.filemanager.Fragments.InternalFragment;
+import com.asif.filemanager.Fragments.FavouriteFragment;
 import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
@@ -61,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             CardFragment cardFragment = new CardFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, cardFragment).addToBackStack(null).commit();
         }
+        else if (itemId == R.id.nav_favorites) {
+            FavouriteFragment favouritesFragment = new FavouriteFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, favouritesFragment).addToBackStack(null).commit();
+        }
         else if (itemId == R.id.nav_about) {
             Toast.makeText(this, "About", Toast.LENGTH_SHORT).show();
         }
@@ -94,13 +99,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             int selectedItemId = selectedItem.getItemId();
             if (selectedItemId == R.id.nav_internal || selectedItemId == R.id.nav_card) {
                 navigationView.setCheckedItem(R.id.nav_home);
-            } else {
+            }
+            else {
                 Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
                 if (currentFragment instanceof InternalFragment) {
                     navigationView.setCheckedItem(R.id.nav_internal);
                 } else if (currentFragment instanceof CardFragment) {
                     navigationView.setCheckedItem(R.id.nav_card);
-                } else {
+                } else if (currentFragment instanceof FavouriteFragment) {
+                    navigationView.setCheckedItem(R.id.nav_favorites);
+                }
+                else {
                     navigationView.setCheckedItem(R.id.nav_home);
                 }
             }

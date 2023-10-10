@@ -6,6 +6,28 @@
     android:background="@color/black2"
     android:orientation="vertical"
     android:weightSum="3">
+    <!-- Search Bar -->
+    <!-- Search Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:gravity="end"
+        android:padding="8dp">
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:iconifiedByDefault="false"
+            android:queryHint="Search..."
+            android:inputType="text"
+            android:imeOptions="actionSearch"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+
+
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
