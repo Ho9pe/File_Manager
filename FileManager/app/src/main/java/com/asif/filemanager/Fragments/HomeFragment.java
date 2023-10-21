@@ -415,21 +415,20 @@ public class HomeFragment extends Fragment implements OnFileSelectedListener {
             switch (selectedItem){
                 case "Details":
                     AlertDialog.Builder detailDialog = new AlertDialog.Builder(getContext());
+                    LayoutInflater inflater = requireActivity().getLayoutInflater();
+                    View dialogView = inflater.inflate(R.layout.custom_alert_dialog, null);
+                    detailDialog.setView(dialogView);
                     detailDialog.setTitle("Details");
-                    final TextView details = new TextView(getContext());
-                    detailDialog.setView(details);
+                    TextView details = dialogView.findViewById(R.id.details_text);
                     Date lastModified = new Date(file.lastModified());
                     SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
                     String formattedDate = formatter.format(lastModified);
-
                     String detailsText = getString(R.string.file_details, file.getName(),
                             Formatter.formatShortFileSize(getContext(), file.length()),
                             file.getAbsolutePath(),
                             formattedDate);
-
                     details.setText(detailsText);
                     detailDialog.setPositiveButton("Ok", (dialogInterface, i1) -> dialogInterface.dismiss());
-
                     AlertDialog alertDialog_details = detailDialog.create();
                     alertDialog_details.show();
                     break;
