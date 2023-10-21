@@ -29,12 +29,9 @@ File Manager is an Android application that simplifies file and folder managemen
 
 1. **Download**: Get the app from [Releases](https://github.com/Ho9pe/File_Manager/releases).
 
-2. **Install**: Open the downloaded APK file and follow the on-screen instructions to install the app.
+2. **Installation and Permissions**: Follow the following steps to setup File Manager app properly: 
 
-3. **Permissions**: During installation, the app will request certain permissions to access your device's storage. Please grant these permissions to enable the app to function correctly.
-
-   **If the app doesn't run properly:**
-   - Install File Manager Apk from Releases
+   - Install the latest File Manager Apk from Releases
    - Open your Android device's **Settings**.
    - Navigate to **App Manager** -> **App List**.
    - Select the **File Manager** app.
