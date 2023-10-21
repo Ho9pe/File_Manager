@@ -34,7 +34,7 @@ File Manager is an Android application that simplifies file and folder managemen
 3. **Permissions**: During installation, the app will request certain permissions to access your device's storage. Please grant these permissions to enable the app to function correctly.
 
    **If the app doesn't run properly:**
-
+   - Install File Manager Apk from Releases
    - Open your Android device's **Settings**.
    - Navigate to **App Manager** -> **App List**.
    - Select the **File Manager** app.
