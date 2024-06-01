@@ -33,3 +33,11 @@ File Manager is an Android application that simplifies file and folder managemen
    - Enable the **Allow management of all files** option.
 
 4. **Enjoy**: Once the installation is complete, you can start using File Manager to efficiently manage your files and folders.
+
+## Screenshots
+
+![Interface 1](https://github.com/Ho9pe/File_Manager/blob/main/FileManager/Screenshots/1.jpg)
+![Interface 2](https://github.com/Ho9pe/File_Manager/blob/main/FileManager/Screenshots/2.jpg)
+![Interface 3](https://github.com/Ho9pe/File_Manager/blob/main/FileManager/Screenshots/3.jpg)
+![Interface 4](https://github.com/Ho9pe/File_Manager/blob/main/FileManager/Screenshots/4.jpg)
+
