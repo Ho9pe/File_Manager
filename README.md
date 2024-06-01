@@ -41,7 +41,7 @@ File Manager is an Android application that simplifies file and folder managemen
    <img width="50%" height="auto" alt="Interface" src="https://github.com/Ho9pe/File_Manager/blob/main/FileManager/Screenshots/2.jpg">
 </p>
 
-<div align="center">
+<div display= "flex" justify-content="center">
    <img width="50%" height="auto" alt="Interface" src="https://github.com/Ho9pe/File_Manager/blob/main/FileManager/Screenshots/3.jpg">
    <img width="50%" height="auto" alt="Interface" src="https://github.com/Ho9pe/File_Manager/blob/main/FileManager/Screenshots/4.jpg">
 </div>
